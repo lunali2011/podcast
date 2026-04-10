@@ -3,1122 +3,294 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>回声档案 | 把书与演讲做成可随身收听的播客</title>
+    <title>宇宙观与现代世界 | 播客专辑</title>
     <style>
-        :root {
-            --bg: #f4efe7;
-            --bg-deep: #1b1714;
-            --paper: rgba(255, 251, 245, 0.72);
-            --ink: #171411;
-            --muted: #695d52;
-            --line: rgba(23, 20, 17, 0.12);
-            --accent: #c96f3b;
-            --accent-strong: #a14e22;
-            --shadow: 0 24px 80px rgba(36, 26, 18, 0.14);
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        html { scroll-behavior: smooth; }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
-            font-family: "SF Pro Display", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
-            color: var(--ink);
-            background:
-                radial-gradient(circle at top left, rgba(201, 111, 59, 0.14), transparent 28%),
-                radial-gradient(circle at top right, rgba(30, 73, 67, 0.12), transparent 24%),
-                linear-gradient(180deg, #f7f1e8 0%, #efe5d8 48%, #efe8df 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             min-height: 100vh;
+            color: #fff;
+            padding: 20px;
             padding-bottom: 180px;
         }
-
-        a { color: inherit; text-decoration: none; }
-
-        .shell {
-            width: min(1120px, calc(100vw - 32px));
-            margin: 0 auto;
+        .container { max-width: 800px; margin: 0 auto; }
+        .album-header { text-align: center; padding: 30px 15px; margin-bottom: 25px; }
+        .album-cover {
+            width: 160px; height: 160px;
+            background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            margin: 0 auto 16px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 50px;
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
         }
-
-        .hero {
-            padding: 28px 0 44px;
+        .album-title { font-size: 22px; font-weight: 700; margin-bottom: 8px; }
+        .album-author { color: #a0a0a0; font-size: 15px; margin-bottom: 4px; }
+        .album-meta { color: #666; font-size: 13px; }
+        .episodes-list {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 15px;
         }
-
-        .topbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 34px;
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-        }
-
-        .brand-mark {
-            width: 42px;
-            height: 42px;
-            border-radius: 14px;
-            background: linear-gradient(135deg, #201711 0%, #3b261e 55%, #cf7b45 100%);
-            color: #fff8f2;
-            display: grid;
-            place-items: center;
-            font-size: 18px;
-            box-shadow: 0 12px 30px rgba(64, 35, 22, 0.22);
-        }
-
-        .topbar-link {
-            color: var(--muted);
-            font-size: 14px;
-        }
-
-        .hero-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.9fr);
-            gap: 28px;
-            align-items: end;
-        }
-
-        .hero-copy {
-            padding: 24px 0 8px;
-        }
-
-        .eyebrow {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            border: 1px solid rgba(23, 20, 17, 0.12);
-            border-radius: 999px;
-            padding: 8px 12px;
-            font-size: 12px;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin-bottom: 18px;
-            background: rgba(255, 255, 255, 0.36);
-            backdrop-filter: blur(10px);
-        }
-
-        .hero h1 {
-            font-size: clamp(44px, 8vw, 84px);
-            line-height: 0.94;
-            letter-spacing: -0.05em;
-            max-width: 7.5em;
-            margin-bottom: 18px;
-        }
-
-        .hero p {
-            max-width: 33rem;
-            color: var(--muted);
-            font-size: 17px;
-            line-height: 1.7;
-            margin-bottom: 26px;
-        }
-
-        .hero-actions {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .button {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 48px;
-            padding: 0 18px;
-            border-radius: 999px;
-            border: 1px solid transparent;
-            font-weight: 600;
-            transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
-        }
-
-        .button:hover { transform: translateY(-1px); }
-
-        .button-primary {
-            background: var(--ink);
-            color: #fff7ef;
-            box-shadow: 0 14px 30px rgba(23, 20, 17, 0.15);
-        }
-
-        .button-secondary {
-            background: rgba(255, 255, 255, 0.46);
-            color: var(--ink);
-            border-color: rgba(23, 20, 17, 0.1);
-            backdrop-filter: blur(10px);
-        }
-
-        .hero-poster {
-            position: relative;
-            min-height: 520px;
-            border-radius: 32px;
-            overflow: hidden;
-            background:
-                radial-gradient(circle at 30% 20%, rgba(255, 217, 194, 0.44), transparent 18%),
-                linear-gradient(160deg, #1f1914 0%, #2d221d 42%, #6d3e29 100%);
-            box-shadow: var(--shadow);
-            transform: translateY(0);
-            animation: floatPoster 4.8s ease-in-out infinite;
-        }
-
-        .poster-glow,
-        .poster-orbit {
-            position: absolute;
-            inset: auto;
-            border-radius: 999px;
-            pointer-events: none;
-        }
-
-        .poster-glow {
-            width: 240px;
-            height: 240px;
-            right: -60px;
-            top: -40px;
-            background: radial-gradient(circle, rgba(255, 196, 157, 0.48), transparent 68%);
-        }
-
-        .poster-orbit {
-            width: 420px;
-            height: 420px;
-            left: -120px;
-            bottom: -180px;
-            border: 1px solid rgba(255, 237, 222, 0.12);
-        }
-
-        .poster-copy {
-            position: absolute;
-            inset: 0;
-            padding: 30px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            color: #fff5ec;
-        }
-
-        .poster-label {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            width: fit-content;
-            padding: 8px 12px;
-            border-radius: 999px;
-            background: rgba(255, 245, 236, 0.12);
-            border: 1px solid rgba(255, 245, 236, 0.14);
-            backdrop-filter: blur(8px);
-            font-size: 12px;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        .poster-body h2 {
-            font-size: clamp(28px, 5vw, 52px);
-            line-height: 0.98;
-            letter-spacing: -0.04em;
-            max-width: 5.5em;
-            margin-bottom: 14px;
-        }
-
-        .poster-body p {
-            color: rgba(255, 245, 236, 0.78);
-            max-width: 20rem;
-            line-height: 1.7;
-        }
-
-        .poster-meta {
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
-        }
-
-        .poster-meta span {
-            padding: 10px 14px;
-            border-radius: 999px;
-            background: rgba(255, 245, 236, 0.08);
-            border: 1px solid rgba(255, 245, 236, 0.12);
-            color: rgba(255, 245, 236, 0.84);
-            font-size: 13px;
-        }
-
-        .section {
-            padding: 16px 0 18px;
-        }
-
-        .section-head {
-            display: flex;
-            justify-content: space-between;
-            align-items: end;
-            gap: 20px;
-            margin-bottom: 18px;
-        }
-
-        .section-head h2 {
-            font-size: clamp(24px, 4vw, 38px);
-            letter-spacing: -0.04em;
-            line-height: 1.02;
-        }
-
-        .section-head p {
-            color: var(--muted);
-            max-width: 30rem;
-            line-height: 1.7;
-        }
-
-        .album-rail {
-            display: grid;
-            grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 16px;
-        }
-
-        .album-tile {
-            position: relative;
-            border: 1px solid rgba(23, 20, 17, 0.08);
-            border-radius: 24px;
-            padding: 18px;
-            min-height: 230px;
-            background: rgba(255, 251, 245, 0.55);
-            backdrop-filter: blur(12px);
-            box-shadow: 0 18px 50px rgba(50, 33, 19, 0.07);
-            transition: transform 0.25s ease, border-color 0.25s ease;
-            cursor: pointer;
-            overflow: hidden;
-        }
-
-        .album-tile:hover {
-            transform: translateY(-4px);
-            border-color: rgba(23, 20, 17, 0.18);
-        }
-
-        .album-tile.is-active {
-            border-color: rgba(201, 111, 59, 0.45);
-            box-shadow: 0 24px 60px rgba(92, 43, 19, 0.12);
-        }
-
-        .album-tile::before {
-            content: "";
-            position: absolute;
-            inset: -30% auto auto -5%;
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(201, 111, 59, 0.14), transparent 68%);
-        }
-
-        .tile-top,
-        .tile-bottom {
-            position: relative;
-            z-index: 1;
-        }
-
-        .tile-cover {
-            width: 56px;
-            height: 56px;
-            border-radius: 18px;
-            display: grid;
-            place-items: center;
-            color: #fff8f2;
-            font-size: 24px;
-            margin-bottom: 26px;
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-        }
-
-        .tile-status {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 12px;
-            padding: 6px 10px;
-            border-radius: 999px;
-            margin-bottom: 14px;
-            background: rgba(23, 20, 17, 0.06);
-            color: var(--muted);
-        }
-
-        .tile-title {
-            font-size: 22px;
-            letter-spacing: -0.04em;
-            margin-bottom: 10px;
-        }
-
-        .tile-subtitle {
-            color: var(--muted);
-            line-height: 1.7;
-            min-height: 54px;
-        }
-
-        .tile-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 24px;
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        .album-stage {
-            margin-top: 18px;
-            display: grid;
-            grid-template-columns: minmax(0, 0.98fr) minmax(280px, 0.62fr);
-            gap: 22px;
-        }
-
-        .album-panel,
-        .detail-panel {
-            border: 1px solid var(--line);
-            border-radius: 28px;
-            background: var(--paper);
-            backdrop-filter: blur(14px);
-            box-shadow: 0 18px 50px rgba(50, 33, 19, 0.08);
-        }
-
-        .album-panel {
-            padding: 24px;
-        }
-
-        .detail-panel {
-            padding: 22px;
-            align-self: start;
-            position: sticky;
-            top: 20px;
-        }
-
-        .album-kicker {
-            color: var(--accent-strong);
-            font-size: 13px;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .album-panel h3,
-        .detail-panel h3 {
-            font-size: clamp(30px, 4vw, 44px);
-            letter-spacing: -0.05em;
-            line-height: 0.95;
-            margin-bottom: 14px;
-        }
-
-        .album-description,
-        .detail-copy {
-            color: var(--muted);
-            line-height: 1.8;
-            margin-bottom: 20px;
-        }
-
-        .album-facts {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 24px;
-        }
-
-        .album-facts span {
-            border-radius: 999px;
-            border: 1px solid var(--line);
-            background: rgba(255,255,255,0.52);
-            padding: 9px 13px;
-            font-size: 13px;
-            color: var(--muted);
-        }
-
-        .episode-list {
-            display: grid;
-            gap: 12px;
-        }
-
         .episode-item {
-            display: grid;
-            grid-template-columns: auto 1fr auto;
-            gap: 14px;
-            align-items: center;
-            padding: 15px 16px;
-            border-radius: 20px;
-            background: rgba(255,255,255,0.44);
-            border: 1px solid transparent;
-            transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
             cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
         }
-
-        .episode-item:hover {
-            transform: translateX(4px);
-            background: rgba(255,255,255,0.66);
+        .episode-item:hover { background: rgba(255, 255, 255, 0.12); }
+        .episode-item:last-child { margin-bottom: 0; }
+        .episode-item.active {
+            background: rgba(102, 126, 234, 0.2);
+            border-color: rgba(102, 126, 234, 0.6);
         }
-
-        .episode-item.is-active {
-            border-color: rgba(201, 111, 59, 0.34);
-            background: rgba(255, 244, 236, 0.92);
-        }
-
+        .episode-header { display: flex; align-items: center; gap: 12px; }
         .episode-number {
-            width: 38px;
-            height: 38px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            width: 32px; height: 32px;
             border-radius: 50%;
-            display: grid;
-            place-items: center;
-            color: #fff8f2;
-            background: linear-gradient(135deg, #1e1713 0%, #c96f3b 100%);
-            font-size: 14px;
-            font-weight: 700;
-            box-shadow: 0 8px 18px rgba(81, 42, 19, 0.18);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; font-weight: 600;
+            flex-shrink: 0;
         }
-
-        .episode-title {
-            font-weight: 700;
-            line-height: 1.5;
-            margin-bottom: 4px;
-        }
-
-        .episode-meta {
-            color: var(--muted);
-            font-size: 13px;
-        }
-
-        .play-badge {
-            min-width: 44px;
-            height: 44px;
+        .episode-info { flex: 1; min-width: 0; }
+        .episode-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; line-height: 1.4; }
+        .episode-duration { color: #888; font-size: 12px; }
+        .play-btn {
+            width: 44px; height: 44px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
             border-radius: 50%;
-            background: #171411;
-            color: #fff8f2;
-            display: grid;
-            place-items: center;
-            box-shadow: 0 10px 22px rgba(36, 26, 18, 0.14);
-        }
-
-        .detail-stack {
-            display: grid;
-            gap: 16px;
-        }
-
-        .detail-block {
-            padding-top: 16px;
-            border-top: 1px solid var(--line);
-        }
-
-        .detail-block:first-child {
-            padding-top: 0;
-            border-top: none;
-        }
-
-        .detail-label {
-            color: var(--muted);
-            font-size: 12px;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-        }
-
-        .detail-value {
-            line-height: 1.7;
-        }
-
-        .empty-state {
-            padding: 26px 0 4px;
-        }
-
-        .empty-state h4 {
-            font-size: 24px;
-            letter-spacing: -0.04em;
-            margin-bottom: 10px;
-        }
-
-        .empty-state p {
-            color: var(--muted);
-            line-height: 1.8;
-            max-width: 26rem;
-        }
-
-        .player-bar {
-            position: fixed;
-            left: 16px;
-            right: 16px;
-            bottom: 16px;
-            z-index: 20;
-            display: none;
-        }
-
-        .player-bar.show { display: block; }
-
-        .player-inner {
-            width: min(1120px, 100%);
-            margin: 0 auto;
-            border-radius: 26px;
-            background: rgba(21, 18, 16, 0.92);
-            color: #fff7ef;
-            box-shadow: 0 24px 60px rgba(20, 14, 10, 0.28);
-            backdrop-filter: blur(22px);
-            padding: 16px 18px calc(16px + env(safe-area-inset-bottom));
-        }
-
-        .player-top {
-            display: flex;
-            justify-content: space-between;
-            gap: 14px;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .player-now {
-            min-width: 0;
-        }
-
-        .player-album {
-            display: block;
-            color: rgba(255, 247, 239, 0.54);
-            font-size: 12px;
-            margin-bottom: 4px;
-        }
-
-        .player-title {
-            display: block;
-            font-size: 14px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .player-time {
-            color: rgba(255, 247, 239, 0.62);
-            white-space: nowrap;
-            font-size: 12px;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            border-radius: 999px;
-            background: rgba(255, 247, 239, 0.16);
             cursor: pointer;
-            margin-bottom: 14px;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s;
+            flex-shrink: 0;
         }
-
+        .play-btn:hover { transform: scale(1.08); }
+        .play-btn:active { transform: scale(0.95); }
+        .play-btn svg { width: 18px; height: 18px; fill: white; margin-left: 2px; }
+        
+        .player-bar {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: rgba(15, 15, 30, 0.98);
+            backdrop-filter: blur(20px);
+            padding: 12px 16px;
+            padding-bottom: calc(12px + env(safe-area-inset-bottom));
+            display: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+        }
+        .player-bar.show { display: block; }
+        .player-content { max-width: 800px; margin: 0 auto; }
+        .player-info { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+        .player-title { font-size: 13px; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 10px; }
+        .player-time { font-size: 11px; color: #888; white-space: nowrap; }
+        .progress-bar {
+            width: 100%; height: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 3px;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
         .progress-fill {
-            width: 0%;
             height: 100%;
-            border-radius: inherit;
-            background: linear-gradient(90deg, #f2a06f 0%, #f1d2a0 100%);
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 3px;
+            width: 0%;
             position: relative;
         }
-
         .progress-fill::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            right: -7px;
+            content: '';
+            position: absolute; right: -6px; top: 50%;
             transform: translateY(-50%);
-            width: 14px;
-            height: 14px;
+            width: 14px; height: 14px;
+            background: white;
             border-radius: 50%;
-            background: #fff7ef;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
         }
-
-        .player-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 18px;
-        }
-
+        .player-controls { display: flex; align-items: center; justify-content: center; gap: 24px; }
         .control-btn {
+            background: none;
             border: none;
-            background: transparent;
-            color: rgba(255,247,239,0.74);
+            color: rgba(255,255,255,0.7);
             cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
+            padding: 8px;
+            transition: color 0.2s;
+            display: flex; align-items: center; justify-content: center;
         }
-
-        .control-btn:hover {
-            color: #fff7ef;
-            background: rgba(255,247,239,0.08);
-        }
-
+        .control-btn:hover { color: white; }
         .control-btn.main {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, #f29d6a 0%, #c96734 100%);
-            color: #fff8f2;
-            box-shadow: 0 12px 24px rgba(201, 111, 59, 0.28);
+            width: 56px; height: 56px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 50%;
+            color: white;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
         }
-
-        .control-btn svg {
-            width: 22px;
-            height: 22px;
-            fill: currentColor;
-        }
-
-        .speed-text {
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        @keyframes floatPoster {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-8px); }
-        }
-
-        @media (max-width: 960px) {
-            .hero-grid,
-            .album-stage,
-            .album-rail {
-                grid-template-columns: 1fr;
-            }
-
-            .hero-poster {
-                min-height: 420px;
-            }
-
-            .detail-panel {
-                position: static;
-            }
-        }
-
-        @media (max-width: 640px) {
-            body { padding-bottom: 210px; }
-
-            .shell {
-                width: min(100vw - 20px, 1120px);
-            }
-
-            .hero {
-                padding-top: 14px;
-            }
-
-            .topbar {
-                margin-bottom: 22px;
-            }
-
-            .hero h1 {
-                font-size: 42px;
-                max-width: 9em;
-            }
-
-            .hero p,
-            .section-head p,
-            .album-description,
-            .detail-copy,
-            .empty-state p {
-                font-size: 15px;
-            }
-
-            .album-panel,
-            .detail-panel {
-                padding: 18px;
-            }
-
-            .episode-item {
-                grid-template-columns: auto 1fr;
-            }
-
-            .play-badge {
-                grid-column: 2;
-                justify-self: end;
-            }
-
-            .player-bar {
-                left: 10px;
-                right: 10px;
-                bottom: 10px;
-            }
-
-            .player-controls {
-                gap: 10px;
-            }
-        }
+        .control-btn svg { width: 22px; height: 22px; fill: currentColor; }
+        .control-btn.main svg { width: 26px; height: 26px; }
+        .control-btn .speed-text { font-size: 12px; font-weight: 600; }
     </style>
 </head>
 <body>
-    <main class="shell">
-        <section class="hero">
-            <div class="topbar">
-                <div class="brand">
-                    <span class="brand-mark">声</span>
-                    <span>回声档案</span>
-                </div>
-                <a class="topbar-link" href="#albums">专辑目录</a>
-            </div>
-
-            <div class="hero-grid">
-                <div class="hero-copy">
-                    <span class="eyebrow">Books, speeches, ideas in audio form</span>
-                    <h1>把值得反复读的内容，做成能随时播放的播客。</h1>
-                    <p>这里收录书籍解读、思想史切片、以及厉害人物演讲的声音版本。不是资讯流，而是可沉浸、可复听、可收藏的长期内容。</p>
-                    <div class="hero-actions">
-                        <a class="button button-primary" href="#current-album">收听当前专辑</a>
-                        <a class="button button-secondary" href="#albums">查看全部专辑</a>
-                    </div>
-                </div>
-
-                <div class="hero-poster">
-                    <div class="poster-glow"></div>
-                    <div class="poster-orbit"></div>
-                    <div class="poster-copy">
-                        <span class="poster-label">Featured album</span>
-                        <div class="poster-body">
-                            <h2>宇宙观与现代世界</h2>
-                            <p>从世界观、时间观、进步信仰到中西互看，把一本书拆成能在通勤路上听完的一组短节目。</p>
-                        </div>
-                        <div class="poster-meta">
-                            <span>书籍播客</span>
-                            <span>5 集已上线</span>
-                            <span>持续更新新专辑</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="albums">
-            <div class="section-head">
-                <div>
-                    <h2>专辑目录</h2>
-                </div>
-                <p>现在主打的是“宇宙观与现代世界”。后面你可以继续往这里添加新的书籍系列、人物演讲系列、以及主题专题。</p>
-            </div>
-            <div class="album-rail" id="albumRail"></div>
-        </section>
-
-        <section class="section" id="current-album">
-            <div class="album-stage">
-                <div class="album-panel">
-                    <div class="album-kicker" id="albumType"></div>
-                    <h3 id="albumTitle"></h3>
-                    <p class="album-description" id="albumDescription"></p>
-                    <div class="album-facts" id="albumFacts"></div>
-                    <div class="episode-list" id="episodesList"></div>
-                    <div class="empty-state" id="emptyState" style="display:none">
-                        <h4>这张专辑正在制作中</h4>
-                        <p>结构已经为它准备好了。等你把音频放进仓库，我们就能直接把它挂上来，和现在这张专辑一样可播放。</p>
-                    </div>
-                </div>
-
-                <aside class="detail-panel">
-                    <h3>内容方向</h3>
-                    <p class="detail-copy">这个站点不是单集拼盘，而是按“专辑”组织内容。每一张专辑都应该有一个清晰主题、一组连贯节目和明确的收听理由。</p>
-                    <div class="detail-stack">
-                        <div class="detail-block">
-                            <div class="detail-label">当前选中</div>
-                            <div class="detail-value" id="detailCurrent"></div>
-                        </div>
-                        <div class="detail-block">
-                            <div class="detail-label">适合加入的下一类内容</div>
-                            <div class="detail-value" id="detailNext"></div>
-                        </div>
-                        <div class="detail-block">
-                            <div class="detail-label">后续添加方式</div>
-                            <div class="detail-value">只需要补一个专辑对象和一组节目数据，再把对应 MP3 放进仓库，就可以继续上线。</div>
-                        </div>
-                    </div>
-                </aside>
-            </div>
-        </section>
-    </main>
-
+    <div class="container">
+        <div class="album-header">
+            <div class="album-cover">🌌</div>
+            <h1 class="album-title">宇宙观与现代世界</h1>
+            <p class="album-author">艾伦·麦克法兰 著</p>
+            <p class="album-meta">6集 · 总时长约42分钟</p>
+        </div>
+        <div class="episodes-list" id="episodesList"></div>
+    </div>
+    
     <div class="player-bar" id="playerBar">
-        <div class="player-inner">
-            <div class="player-top">
-                <div class="player-now">
-                    <span class="player-album" id="playerAlbum">未播放专辑</span>
-                    <span class="player-title" id="playerTitle">选择一集开始收听</span>
-                </div>
+        <div class="player-content">
+            <div class="player-info">
+                <span class="player-title" id="playerTitle">未播放</span>
                 <span class="player-time" id="playerTime">0:00 / 0:00</span>
             </div>
-            <div class="progress-bar" id="progressBar">
-                <div class="progress-fill" id="progressFill"></div>
-            </div>
+            <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
             <div class="player-controls">
-                <button class="control-btn" id="prevBtn" aria-label="上一集">
-                    <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
-                </button>
-                <button class="control-btn main" id="playPauseBtn" aria-label="播放或暂停">
+                <button class="control-btn" id="prevBtn"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
+                <button class="control-btn main" id="playPauseBtn">
                     <svg viewBox="0 0 24 24" id="playIcon"><path d="M8 5v14l11-7z"/></svg>
                     <svg viewBox="0 0 24 24" id="pauseIcon" style="display:none"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
                 </button>
-                <button class="control-btn" id="nextBtn" aria-label="下一集">
-                    <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
-                </button>
-                <button class="control-btn" id="speedBtn" aria-label="切换播放速度">
-                    <span class="speed-text" id="speedText">1x</span>
-                </button>
+                <button class="control-btn" id="nextBtn"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+                <button class="control-btn" id="speedBtn"><span class="speed-text" id="speedText">1x</span></button>
             </div>
         </div>
     </div>
-
+    
     <audio id="audioPlayer" preload="metadata"></audio>
-
+    
     <script>
-        const albums = [
-            {
-                id: "worldview",
-                status: "available",
-                kind: "Book series",
-                badge: "已上线",
-                title: "宇宙观与现代世界",
-                author: "艾伦·麦克法兰",
-                cover: "🌌",
-                coverStyle: "linear-gradient(135deg, #1f1914 0%, #4f2f20 55%, #c96f3b 100%)",
-                summary: "把一本关于世界观与现代性的书拆成一组短音频，适合反复收听和逐集理解。",
-                description: "这张专辑从“我们如何看世界”切入，依次谈时间、进步、战争、中西互看与未来协作。它不是快餐摘要，而是带着结构感的口头版本，适合通勤、散步、睡前收听。",
-                nextIdea: "接下来可以继续做另一本文史类书籍，或者做“厉害人物的演讲”专题，把人物的思想转成一组可连听的短节目。",
-                totalDuration: "约36分钟",
-                year: "首发专辑",
-                episodes: [
-                    { id: 1, title: "世界观：我们日用而不知的玻璃瓶", duration: "7:32", audioUrl: "./mp3/世界观：我们日用而不知的玻璃瓶.mp3" },
-                    { id: 2, title: "时间的发明：从循环到线性", duration: "7:51", audioUrl: "./mp3/时间的发明：从循环到线性.mp3" },
-                    { id: 3, title: "进步信仰：欧洲如何迷信明天会更好", duration: "6:51", audioUrl: "./mp3/进步信仰：欧洲如何迷信明天会更好 (1).mp3" },
-                    { id: 4, title: "西方看中国：从仰慕到蔑视的真相", duration: "7:02", audioUrl: "./mp3/西方看中国：从仰慕到蔑视的真相.mp3" },
-                    { id: 5, title: "未来交响乐：差异不是威胁", duration: "7:06", audioUrl: "./mp3/未来交响乐：差异不是威胁.mp3" }
-                ]
-            },
-            {
-                id: "speech-archive",
-                status: "upcoming",
-                kind: "Speech series",
-                badge: "即将上线",
-                title: "厉害人物的演讲",
-                author: "人物与演讲档案",
-                cover: "🎙️",
-                coverStyle: "linear-gradient(135deg, #142321 0%, #214341 55%, #6fa38d 100%)",
-                summary: "把有洞见的演讲拆成可连续播放的中文播客版本，适合在一口气里听懂一个人。",
-                description: "这一类专辑很适合做成系列化内容。每张专辑可以围绕一个人、一个主题或者一个时代，做成多集的声音整理。",
-                nextIdea: "可以从丘吉尔、乔布斯、芒格、查理·罗斯访谈、TED 历史经典演讲里选一位或一组开始。",
-                totalDuration: "待添加",
-                year: "筹备中",
-                episodes: []
-            },
-            {
-                id: "night-reading",
-                status: "upcoming",
-                kind: "Reading series",
-                badge: "可扩展",
-                title: "书房夜读",
-                author: "主题阅读计划",
-                cover: "📚",
-                coverStyle: "linear-gradient(135deg, #241a14 0%, #5d4536 55%, #b08f6a 100%)",
-                summary: "适合把一本书拆成一组夜读节目，每一集只讲一个核心问题，让人愿意连续追完。",
-                description: "如果你后续会持续做书的播客，这一类专辑会成为网站的长期骨架。每本书都是一个系列，每个系列都有自己的节奏和封面。",
-                nextIdea: "可以优先做那些“值得重听”的内容，而不是只适合当天消费的信息。",
-                totalDuration: "待添加",
-                year: "待发布",
-                episodes: []
-            }
+        const episodes = [
+            { id: 1, title: '世界观：我们日用而不知的玻璃瓶', duration: '7:32', audioUrl: './mp3/世界观：我们日用而不知的玻璃瓶.mp3' },
+            { id: 2, title: '时间的发明：从循环到线性', duration: '7:51', audioUrl: './mp3/时间的发明：从循环到线性.mp3' },
+            { id: 3, title: '进步信仰：欧洲如何迷信明天会更好', duration: '6:51', audioUrl: './mp3/进步信仰：欧洲如何迷信明天会更好 (1).mp3' },
+            { id: 4, title: '西方看中国：从仰慕到蔑视的真相', duration: '7:02', audioUrl: './mp3/西方看中国：从仰慕到蔑视的真相.mp3' },
+            { id: 5, title: '未来交响乐：差异不是威胁', duration: '7:06', audioUrl: './mp3/未来交响乐：差异不是威胁.mp3' }
         ];
-
-        let currentAlbumId = albums[0].id;
+        
         let currentEpisode = null;
         let isPlaying = false;
         let playbackRate = 1;
         const speeds = [0.75, 1, 1.25, 1.5, 2];
         let speedIndex = 1;
-
-        const audio = document.getElementById("audioPlayer");
-        const albumRail = document.getElementById("albumRail");
-        const episodesList = document.getElementById("episodesList");
-        const emptyState = document.getElementById("emptyState");
-        const albumType = document.getElementById("albumType");
-        const albumTitle = document.getElementById("albumTitle");
-        const albumDescription = document.getElementById("albumDescription");
-        const albumFacts = document.getElementById("albumFacts");
-        const detailCurrent = document.getElementById("detailCurrent");
-        const detailNext = document.getElementById("detailNext");
-        const playerBar = document.getElementById("playerBar");
-        const playerAlbum = document.getElementById("playerAlbum");
-        const playerTitle = document.getElementById("playerTitle");
-        const playerTime = document.getElementById("playerTime");
-        const progressFill = document.getElementById("progressFill");
-        const playIcon = document.getElementById("playIcon");
-        const pauseIcon = document.getElementById("pauseIcon");
-
-        function getCurrentAlbum() {
-            return albums.find((album) => album.id === currentAlbumId) || albums[0];
-        }
-
+        
+        const audio = document.getElementById('audioPlayer');
+        const playerBar = document.getElementById('playerBar');
+        const playerTitle = document.getElementById('playerTitle');
+        const playerTime = document.getElementById('playerTime');
+        const progressFill = document.getElementById('progressFill');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        
         function formatTime(seconds) {
-            if (!Number.isFinite(seconds)) return "0:00";
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, "0")}`;
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
         }
-
-        function renderAlbumRail() {
-            albumRail.innerHTML = albums.map((album) => `
-                <article class="album-tile ${album.id === currentAlbumId ? "is-active" : ""}" data-album-id="${album.id}">
-                    <div class="tile-top">
-                        <div class="tile-cover" style="background:${album.coverStyle}">${album.cover}</div>
-                        <div class="tile-status">${album.badge}</div>
-                        <h3 class="tile-title">${album.title}</h3>
-                        <p class="tile-subtitle">${album.summary}</p>
-                    </div>
-                    <div class="tile-bottom">
-                        <span>${album.author}</span>
-                        <span>${album.episodes.length ? `${album.episodes.length} 集` : album.year}</span>
-                    </div>
-                </article>
-            `).join("");
-
-            document.querySelectorAll(".album-tile").forEach((tile) => {
-                tile.addEventListener("click", () => {
-                    currentAlbumId = tile.dataset.albumId;
-                    currentEpisode = null;
-                    audio.pause();
-                    audio.removeAttribute("src");
-                    audio.load();
-                    playerBar.classList.remove("show");
-                    renderPage();
-                });
-            });
-        }
-
-        function renderAlbumDetails() {
-            const album = getCurrentAlbum();
-            albumType.textContent = album.kind;
-            albumTitle.textContent = album.title;
-            albumDescription.textContent = album.description;
-            detailCurrent.textContent = `${album.title} · ${album.author} · ${album.badge}`;
-            detailNext.textContent = album.nextIdea;
-
-            albumFacts.innerHTML = [
-                album.author,
-                album.episodes.length ? `${album.episodes.length} 集` : "暂无节目",
-                album.totalDuration,
-                album.year
-            ].map((fact) => `<span>${fact}</span>`).join("");
-        }
-
+        
         function renderEpisodes() {
-            const album = getCurrentAlbum();
-            const episodes = album.episodes;
-
-            if (!episodes.length) {
-                episodesList.innerHTML = "";
-                emptyState.style.display = "block";
-                return;
-            }
-
-            emptyState.style.display = "none";
-            episodesList.innerHTML = episodes.map((episode) => `
-                <div class="episode-item ${currentEpisode && currentEpisode.albumId === album.id && currentEpisode.id === episode.id ? "is-active" : ""}" data-id="${episode.id}">
-                    <span class="episode-number">${episode.id}</span>
-                    <div>
-                        <div class="episode-title">${episode.title}</div>
-                        <div class="episode-meta">${album.kind} · ${episode.duration}</div>
+            const list = document.getElementById('episodesList');
+            list.innerHTML = episodes.map(ep => `
+                <div class="episode-item" data-id="${ep.id}">
+                    <div class="episode-header">
+                        <span class="episode-number">${ep.id}</span>
+                        <div class="episode-info">
+                            <div class="episode-title">${ep.title}</div>
+                            <div class="episode-duration">${ep.duration}</div>
+                        </div>
+                        <button class="play-btn"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></button>
                     </div>
-                    <span class="play-badge" aria-hidden="true">▶</span>
                 </div>
-            `).join("");
-
-            document.querySelectorAll(".episode-item").forEach((item) => {
-                item.addEventListener("click", () => playEpisode(Number(item.dataset.id)));
+            `).join('');
+            
+            document.querySelectorAll('.episode-item').forEach(item => {
+                item.addEventListener('click', () => playEpisode(parseInt(item.dataset.id)));
             });
         }
-
-        function renderPage() {
-            renderAlbumRail();
-            renderAlbumDetails();
-            renderEpisodes();
-        }
-
+        
         function playEpisode(id) {
-            const album = getCurrentAlbum();
-            const episode = album.episodes.find((entry) => entry.id === id);
+            const episode = episodes.find(e => e.id === id);
             if (!episode) return;
-
-            currentEpisode = { ...episode, albumId: album.id, albumTitle: album.title };
-            playerAlbum.textContent = album.title;
+            
+            document.querySelectorAll('.episode-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-id="${id}"]`).classList.add('active');
+            
+            currentEpisode = episode;
             playerTitle.textContent = episode.title;
-            playerBar.classList.add("show");
-
+            playerBar.classList.add('show');
+            
             audio.src = encodeURI(episode.audioUrl);
-            audio.playbackRate = playbackRate;
             audio.play();
-            renderEpisodes();
         }
-
+        
         function updatePlayButton() {
-            playIcon.style.display = isPlaying ? "none" : "block";
-            pauseIcon.style.display = isPlaying ? "block" : "none";
+            playIcon.style.display = isPlaying ? 'none' : 'block';
+            pauseIcon.style.display = isPlaying ? 'block' : 'none';
         }
-
+        
         function togglePlay() {
-            const album = getCurrentAlbum();
-
             if (!currentEpisode) {
-                if (!album.episodes.length) return;
-                playEpisode(album.episodes[0].id);
+                playEpisode(1);
                 return;
             }
-
             if (isPlaying) {
                 audio.pause();
             } else {
                 audio.play();
             }
         }
-
-        function playRelative(offset) {
-            const album = getCurrentAlbum();
-            if (!currentEpisode) return;
-
-            const index = album.episodes.findIndex((episode) => episode.id === currentEpisode.id);
-            const target = album.episodes[index + offset];
-            if (target) playEpisode(target.id);
-        }
-
-        document.getElementById("playPauseBtn").addEventListener("click", togglePlay);
-        document.getElementById("prevBtn").addEventListener("click", () => playRelative(-1));
-        document.getElementById("nextBtn").addEventListener("click", () => playRelative(1));
-
-        document.getElementById("speedBtn").addEventListener("click", () => {
+        
+        document.getElementById('playPauseBtn').addEventListener('click', togglePlay);
+        
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (!currentEpisode || currentEpisode.id === 1) return;
+            playEpisode(currentEpisode.id - 1);
+        });
+        
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            if (!currentEpisode || currentEpisode.id === episodes.length) return;
+            playEpisode(currentEpisode.id + 1);
+        });
+        
+        document.getElementById('speedBtn').addEventListener('click', () => {
             speedIndex = (speedIndex + 1) % speeds.length;
             playbackRate = speeds[speedIndex];
             audio.playbackRate = playbackRate;
-            document.getElementById("speedText").textContent = `${playbackRate}x`;
+            document.getElementById('speedText').textContent = playbackRate + 'x';
         });
-
-        audio.addEventListener("play", () => {
-            isPlaying = true;
-            updatePlayButton();
-        });
-
-        audio.addEventListener("pause", () => {
-            isPlaying = false;
-            updatePlayButton();
-        });
-
-        audio.addEventListener("ended", () => {
-            const album = getCurrentAlbum();
-            if (!currentEpisode) return;
-
-            const index = album.episodes.findIndex((episode) => episode.id === currentEpisode.id);
-            const nextEpisode = album.episodes[index + 1];
-            if (nextEpisode) {
-                playEpisode(nextEpisode.id);
-            } else {
-                isPlaying = false;
-                updatePlayButton();
+        
+        audio.addEventListener('play', () => { isPlaying = true; updatePlayButton(); });
+        audio.addEventListener('pause', () => { isPlaying = false; updatePlayButton(); });
+        audio.addEventListener('ended', () => {
+            if (currentEpisode && currentEpisode.id < episodes.length) {
+                playEpisode(currentEpisode.id + 1);
             }
         });
-
-        audio.addEventListener("timeupdate", () => {
-            const progress = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
-            progressFill.style.width = `${progress}%`;
+        
+        audio.addEventListener('timeupdate', () => {
+            const progress = (audio.currentTime / audio.duration) * 100;
+            progressFill.style.width = progress + '%';
             playerTime.textContent = `${formatTime(audio.currentTime)} / ${formatTime(audio.duration)}`;
         });
-
-        document.getElementById("progressBar").addEventListener("click", (event) => {
-            if (!audio.duration) return;
-            const rect = event.currentTarget.getBoundingClientRect();
-            const position = (event.clientX - rect.left) / rect.width;
-            audio.currentTime = position * audio.duration;
+        
+        document.getElementById('progressBar').addEventListener('click', (e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            const pos = (e.clientX - rect.left) / rect.width;
+            audio.currentTime = pos * audio.duration;
         });
-
-        renderPage();
+        
+        renderEpisodes();
     </script>
 </body>
 </html>
