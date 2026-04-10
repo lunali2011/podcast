@@ -486,6 +486,18 @@
             color: #fbfff2;
             box-shadow: 0 10px 20px rgba(12, 138, 106, 0.18);
         }
+
+        .speed-btn {
+            min-width: 46px;
+            height: 38px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(255, 254, 248, 0.92);
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 0 10px;
+        }
     </style>
 </head>
 <body>
@@ -559,6 +571,7 @@
                     <div class="player-meta">选择一集后，这里会显示正在播放</div>
                 </div>
                 <div class="player-actions">
+                    <button class="speed-btn" id="speedBtn">1x</button>
                     <button class="icon-btn">≡</button>
                     <button class="icon-btn primary" id="playToggleBtn">▶</button>
                 </div>
@@ -620,7 +633,10 @@
         const playerMeta = document.querySelector(".player-meta");
         const playerStatusText = document.getElementById("playerStatusText");
         const playerProgressBar = document.getElementById("playerProgressBar");
+        const speedBtn = document.getElementById("speedBtn");
         const playToggleBtn = document.getElementById("playToggleBtn");
+        const speeds = [1, 1.25, 1.5, 2];
+        let speedIndex = 0;
 
         function renderEpisodes() {
             detailEpisodes.innerHTML = episodes.map((episode) => `
@@ -644,6 +660,7 @@
                         if (audio.paused) {
                             playerMeta.textContent = "宇宙观与现代世界 · 正在播放";
                             playerStatusText.textContent = "播放中";
+                            audio.playbackRate = speeds[speedIndex];
                             audio.play();
                         } else {
                             playerMeta.textContent = "宇宙观与现代世界 · 已暂停";
@@ -655,6 +672,7 @@
                         playerMeta.textContent = "宇宙观与现代世界 · 正在播放";
                         playerStatusText.textContent = "播放中";
                         audio.src = encodeURI(episodeBtn.dataset.audio);
+                        audio.playbackRate = speeds[speedIndex];
                         audio.play();
                     }
 
@@ -700,12 +718,19 @@
             if (audio.paused) {
                 playerStatusText.textContent = "播放中";
                 playerMeta.textContent = "宇宙观与现代世界 · 正在播放";
+                audio.playbackRate = speeds[speedIndex];
                 audio.play();
             } else {
                 playerStatusText.textContent = "已暂停";
                 playerMeta.textContent = "宇宙观与现代世界 · 已暂停";
                 audio.pause();
             }
+        });
+
+        speedBtn.addEventListener("click", () => {
+            speedIndex = (speedIndex + 1) % speeds.length;
+            audio.playbackRate = speeds[speedIndex];
+            speedBtn.textContent = `${speeds[speedIndex]}x`;
         });
 
         audio.addEventListener("play", () => {
