@@ -1,0 +1,40 @@
+<svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="playGrad" x1="36" y1="24" x2="122" y2="136" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A9F7C9"/>
+      <stop offset="0.45" stop-color="#64D79A"/>
+      <stop offset="1" stop-color="#0C8A6A"/>
+    </linearGradient>
+    <linearGradient id="ringGrad" x1="16" y1="80" x2="144" y2="80" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0A7A5D"/>
+      <stop offset="0.52" stop-color="#9EF6C4"/>
+      <stop offset="1" stop-color="#CBFFE2"/>
+    </linearGradient>
+    <radialGradient id="sphereGrad" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(72 58) rotate(59.5) scale(68.1322)">
+      <stop stop-color="#C9FFD9"/>
+      <stop offset="0.54" stop-color="#9DEBB8"/>
+      <stop offset="1" stop-color="#5BA67C"/>
+    </radialGradient>
+    <filter id="softGlow" x="-30" y="-30" width="220" height="220" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feGaussianBlur stdDeviation="8"/>
+    </filter>
+  </defs>
+
+  <g>
+    <animateTransform attributeName="transform" type="translate" values="0 0; 0 -2; 0 0" dur="6s" repeatCount="indefinite"/>
+
+    <g opacity="0.22" filter="url(#softGlow)">
+      <circle cx="82" cy="78" r="48" fill="#97E8B7"/>
+    </g>
+
+    <path d="M38 34.5C38 26.4919 46.8533 21.7213 53.5 26.1186L121.5 71.1186C127.522 75.1013 127.522 83.8987 121.5 87.8814L53.5 132.881C46.8533 137.279 38 132.508 38 124.5V34.5Z" fill="url(#playGrad)"/>
+
+    <g>
+      <animateTransform attributeName="transform" type="rotate" from="-18 80 80" to="342 80 80" dur="14s" repeatCount="indefinite"/>
+      <ellipse cx="80" cy="80" rx="60" ry="17" transform="rotate(-24 80 80)" fill="url(#ringGrad)"/>
+      <ellipse cx="80" cy="80" rx="43" ry="10" transform="rotate(-24 80 80)" fill="none" stroke="#FFFFFF" stroke-opacity="0.28" stroke-width="2"/>
+    </g>
+
+    <circle cx="80" cy="80" r="33" fill="url(#sphereGrad)" opacity="0.88"/>
+  </g>
+</svg>

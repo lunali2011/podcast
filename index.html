@@ -42,6 +42,26 @@
             margin-bottom: 18px;
         }
 
+        .brand {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 4px;
+        }
+
+        .brand-logo {
+            width: 54px;
+            height: 54px;
+            display: block;
+        }
+
+        .brand-name {
+            font-size: 13px;
+            color: var(--text);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
         .badge {
             display: inline-flex;
             align-items: center;
@@ -530,7 +550,10 @@
 <body>
     <main class="app">
         <div class="topbar">
-            <div class="badge">回声档案</div>
+            <div class="brand">
+                <img class="brand-logo" src="./logo-luna.svg" alt="Luna的播客 logo">
+                <div class="brand-name">Luna的播客</div>
+            </div>
             <div style="color:var(--muted);font-size:14px;">发现</div>
         </div>
 
