@@ -686,6 +686,13 @@
         let speedIndex = 0;
         let currentEpisodeData = null;
 
+        function formatTime(seconds) {
+            if (!Number.isFinite(seconds)) return "0:00";
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins}:${secs.toString().padStart(2, "0")}`;
+        }
+
         function renderEpisodes() {
             detailEpisodes.innerHTML = episodes.map((episode) => `
                 <button class="detail-episode" data-audio="${episode.audio}" data-title="${episode.title}">
@@ -819,9 +826,3 @@
     </script>
 </body>
 </html>
-        function formatTime(seconds) {
-            if (!Number.isFinite(seconds)) return "0:00";
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins}:${secs.toString().padStart(2, "0")}`;
-        }
