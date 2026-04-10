@@ -631,35 +631,40 @@
                 title: "世界观：我们日用而不知的玻璃瓶",
                 meta: "宇宙观与现代世界 · 7:32",
                 desc: "从一个最常用却最少被意识到的概念切入，讲清楚什么叫世界观。",
-                audio: "./mp3/世界观：我们日用而不知的玻璃瓶.mp3"
+                audio: "./mp3/世界观：我们日用而不知的玻璃瓶.mp3",
+                duration: "7:32"
             },
             {
                 index: "02",
                 title: "时间的发明：从循环到线性",
                 meta: "宇宙观与现代世界 · 7:51",
                 desc: "为什么现代人会执着于未来、效率和进度？答案可能就藏在时间观里。",
-                audio: "./mp3/时间的发明：从循环到线性.mp3"
+                audio: "./mp3/时间的发明：从循环到线性.mp3",
+                duration: "7:51"
             },
             {
                 index: "03",
                 title: "进步信仰：欧洲如何迷信明天会更好",
                 meta: "宇宙观与现代世界 · 6:51",
                 desc: "讲清楚所谓“进步”为什么会变成一种被深信不疑的现代信仰。",
-                audio: "./mp3/进步信仰：欧洲如何迷信明天会更好 (1).mp3"
+                audio: "./mp3/进步信仰：欧洲如何迷信明天会更好 (1).mp3",
+                duration: "6:51"
             },
             {
                 index: "04",
                 title: "西方看中国：从仰慕到蔑视的真相",
                 meta: "宇宙观与现代世界 · 7:02",
                 desc: "一个足够抓人的标题，加上一句清楚的简介，就能让用户自然点进去听。",
-                audio: "./mp3/西方看中国：从仰慕到蔑视的真相.mp3"
+                audio: "./mp3/西方看中国：从仰慕到蔑视的真相.mp3",
+                duration: "7:02"
             },
             {
                 index: "05",
                 title: "未来交响乐：差异不是威胁",
                 meta: "宇宙观与现代世界 · 7:06",
                 desc: "把专辑收束到未来视角，告诉用户这不只是在回顾历史，而是在理解我们今天怎么生活。",
-                audio: "./mp3/未来交响乐：差异不是威胁.mp3"
+                audio: "./mp3/未来交响乐：差异不是威胁.mp3",
+                duration: "7:06"
             }
         ];
 
@@ -679,6 +684,7 @@
         const playToggleBtn = document.getElementById("playToggleBtn");
         const speeds = [1, 1.25, 1.5, 2];
         let speedIndex = 0;
+        let currentEpisodeData = null;
 
         function renderEpisodes() {
             detailEpisodes.innerHTML = episodes.map((episode) => `
@@ -700,19 +706,23 @@
 
                     if (isCurrent) {
                         if (audio.paused) {
-                            playerMeta.textContent = "宇宙观与现代世界 · 正在播放";
+                            playerMeta.textContent = "宇宙观与现代世界";
                             playerStatusText.textContent = "播放中";
                             audio.playbackRate = speeds[speedIndex];
                             audio.play();
                         } else {
-                            playerMeta.textContent = "宇宙观与现代世界 · 已暂停";
+                            playerMeta.textContent = "宇宙观与现代世界";
                             playerStatusText.textContent = "已暂停";
                             audio.pause();
                         }
                     } else {
+                        const episodeData = episodes.find((episode) => episode.audio === episodeBtn.dataset.audio);
+                        currentEpisodeData = episodeData || null;
                         playerName.textContent = episodeBtn.dataset.title;
-                        playerMeta.textContent = "宇宙观与现代世界 · 正在播放";
+                        playerMeta.textContent = "宇宙观与现代世界";
                         playerStatusText.textContent = "播放中";
+                        playerTime.textContent = "0:00";
+                        playerDuration.textContent = episodeData?.duration || "0:00";
                         audio.src = encodeURI(episodeBtn.dataset.audio);
                         audio.playbackRate = speeds[speedIndex];
                         audio.play();
@@ -738,9 +748,9 @@
                 const meta = episodeBtn.querySelector(".detail-episode-meta");
                 const base = episodes.find((episode) => episode.audio === episodeBtn.dataset.audio)?.meta || "宇宙观与现代世界";
                 if (meta && isCurrent && !audio.paused) {
-                    meta.textContent = "宇宙观与现代世界 · 正在播放";
+                    meta.textContent = "宇宙观与现代世界";
                 } else if (meta && isCurrent && audio.paused) {
-                    meta.textContent = "宇宙观与现代世界 · 已暂停";
+                    meta.textContent = "宇宙观与现代世界";
                 } else if (meta) {
                     meta.textContent = base;
                 }
@@ -759,12 +769,12 @@
             if (!audio.src) return;
             if (audio.paused) {
                 playerStatusText.textContent = "播放中";
-                playerMeta.textContent = "宇宙观与现代世界 · 正在播放";
+                playerMeta.textContent = "宇宙观与现代世界";
                 audio.playbackRate = speeds[speedIndex];
                 audio.play();
             } else {
                 playerStatusText.textContent = "已暂停";
-                playerMeta.textContent = "宇宙观与现代世界 · 已暂停";
+                playerMeta.textContent = "宇宙观与现代世界";
                 audio.pause();
             }
         });
@@ -802,7 +812,7 @@
 
         audio.addEventListener("loadedmetadata", () => {
             playerTime.textContent = formatTime(audio.currentTime);
-            playerDuration.textContent = formatTime(audio.duration);
+            playerDuration.textContent = Number.isFinite(audio.duration) ? formatTime(audio.duration) : (currentEpisodeData?.duration || "0:00");
         });
 
         renderEpisodes();
