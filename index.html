@@ -170,12 +170,11 @@
     
     <script>
         const episodes = [
-            { id: 1, title: '世界观是什么——我们日用而不知的玻璃瓶', duration: '7:32', audioUrl: 'https://lf3-static.bytednsdoc.com/7625984057175851310-data_volume/generated/20260410/98ab6334-4790-4b88-8739-ddeccb1061ad/audio_741bb88d-d001-4b82-b94c-b0c6b8114305.mp3' },
-            { id: 2, title: '时间的发明：从循环到线性', duration: '7:51', audioUrl: 'https://lf3-static.bytednsdoc.com/7625984057175851310-data_volume/generated/20260410/edb0864f-14d2-44ad-8d04-058e50af4e4f/audio_a91f7bd5-6b59-4837-8b50-984167756afb.mp3' },
-            { id: 3, title: '进步信仰：欧洲如何迷信明天会更好', duration: '6:51', audioUrl: 'https://lf3-static.bytednsdoc.com/7625984057175851310-data_volume/generated/20260410/adf93202-f1e7-44c4-93de-3653a264ab07/audio_7360b5a7-88c3-419f-b51e-c2d05849783e.mp3' },
-            { id: 4, title: '西方看中国：从仰慕到蔑视的真相', duration: '7:02', audioUrl: 'https://lf3-static.bytednsdoc.com/7625984057175851310-data_volume/generated/20260410/1791a776-1d6b-43b4-9967-bd29be0a8715/audio_713ef968-9b57-4154-b9c2-a06b88d8c97f.mp3' },
-            { id: 5, title: '一战如何摧毁进步信仰？', duration: '6:19', audioUrl: 'https://lf3-static.bytednsdoc.com/7625984057175851310-data_volume/generated/20260410/4b8cc050-6fed-46a1-996b-6c6942769b9a/audio_e5588150-7ae5-48f6-ad60-0eed8f663f39.mp3' },
-            { id: 6, title: '未来交响乐：差异不是威胁', duration: '7:06', audioUrl: 'https://lf3-static.bytednsdoc.com/7625984057175851310-data_volume/generated/20260410/a59e62e3-1cdd-4a63-ad7a-27c803edb6d6/audio_af9c18d8-5ebb-443b-907e-8c0497ad2be3.mp3' }
+            { id: 1, title: '世界观：我们日用而不知的玻璃瓶', duration: '7:32', audioUrl: './mp3/世界观：我们日用而不知的玻璃瓶.mp3' },
+            { id: 2, title: '时间的发明：从循环到线性', duration: '7:51', audioUrl: './mp3/时间的发明：从循环到线性.mp3' },
+            { id: 3, title: '进步信仰：欧洲如何迷信明天会更好', duration: '6:51', audioUrl: './mp3/进步信仰：欧洲如何迷信明天会更好 (1).mp3' },
+            { id: 4, title: '西方看中国：从仰慕到蔑视的真相', duration: '7:02', audioUrl: './mp3/西方看中国：从仰慕到蔑视的真相.mp3' },
+            { id: 5, title: '未来交响乐：差异不是威胁', duration: '7:06', audioUrl: './mp3/未来交响乐：差异不是威胁.mp3' }
         ];
         
         let currentEpisode = null;
@@ -231,7 +230,7 @@
             playerTitle.textContent = episode.title;
             playerBar.classList.add('show');
             
-            audio.src = episode.audioUrl;
+            audio.src = encodeURI(episode.audioUrl);
             audio.play();
         }
         
