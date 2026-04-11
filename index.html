@@ -649,7 +649,10 @@
 
     <audio id="audioPlayer" preload="metadata"></audio>
 
+    <script src="./site-config.js"></script>
     <script>
+        const API_BASE = (window.LUNA_API_BASE || "").replace(/\/$/, "");
+
         let albums = [];
         let currentAlbum = null;
 
@@ -701,11 +704,16 @@
             return `./${audioUrl}`;
         }
 
+        function apiUrl(path) {
+            if (!API_BASE) return path;
+            return `${API_BASE}${path}`;
+        }
+
         function renderAlbumCards() {
             if (!albums.length) {
                 cardList.innerHTML = `
                     <div class="card-empty">
-                        还没有专辑。去 <a href="./studio.html">新建一张</a>，生成草稿后点 "添加到首页" 就会出现在这里。
+                        还没有专辑。去 <a href="./studio.html">新建一张</a>，出品后就会出现在这里。
                     </div>`;
                 return;
             }
@@ -830,7 +838,10 @@
 
         async function loadAlbums() {
             try {
-                const response = await fetch("./albums.json", { cache: "no-store" });
+                let response = await fetch(apiUrl("/api/albums"), { cache: "no-store" });
+                if (!response.ok) {
+                    response = await fetch("./albums.json", { cache: "no-store" });
+                }
                 const data = await response.json();
                 albums = Array.isArray(data.albums) ? data.albums : [];
             } catch (error) {

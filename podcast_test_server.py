@@ -22,7 +22,7 @@ from enum import IntEnum
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from queue import Queue
-from typing import Callable, List
+from typing import Callable, Dict, List, Optional
 from urllib.parse import urlparse
 
 import websockets
@@ -55,10 +55,10 @@ JOBS_FILE = ROOT / "output" / "jobs.json"
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("podcast-test-server")
 
-JOB_QUEUE: Queue[str] = Queue()
+JOB_QUEUE = Queue()
 JOB_LOCK = threading.Lock()
-JOB_CANCEL_FLAGS: dict[str, threading.Event] = {}
-JOBS: dict[str, dict] = {}
+JOB_CANCEL_FLAGS: Dict[str, threading.Event] = {}
+JOBS: Dict[str, dict] = {}
 
 
 class JobCancelledError(RuntimeError):
@@ -77,7 +77,7 @@ def load_env_file() -> None:
         os.environ.setdefault(key.strip(), value.strip())
 
 
-def read_jobs_file() -> dict[str, dict]:
+def read_jobs_file() -> Dict[str, dict]:
     if not JOBS_FILE.exists():
         return {}
     try:
@@ -101,7 +101,7 @@ def save_jobs_file() -> None:
     JOBS_FILE.write_text(json.dumps(serializable, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
-def list_jobs() -> list[dict]:
+def list_jobs() -> List[dict]:
     with JOB_LOCK:
         items = list(JOBS.values())
     sanitized = [
@@ -109,6 +109,11 @@ def list_jobs() -> list[dict]:
         for item in items
     ]
     return sorted(sanitized, key=lambda item: item.get("createdAt", ""), reverse=True)
+
+
+def list_albums_payload() -> dict:
+    data = load_albums()
+    return {"albums": data.get("albums", [])}
 
 
 def update_job(job_id: str, **changes) -> dict:
@@ -159,7 +164,7 @@ def dismiss_job(job_id: str) -> bool:
     return True
 
 
-def cancel_job(job_id: str) -> dict | None:
+def cancel_job(job_id: str) -> Optional[dict]:
     with JOB_LOCK:
         job = JOBS.get(job_id)
         cancel_event = JOB_CANCEL_FLAGS.get(job_id)
@@ -373,7 +378,7 @@ def clean_text_block(text: str) -> str:
     return text.strip()
 
 
-def split_into_paragraphs(text: str) -> list[str]:
+def split_into_paragraphs(text: str) -> List[str]:
     cleaned = clean_text_block(text)
     paragraphs = [part.strip() for part in re.split(r"\n\s*\n", cleaned) if part.strip()]
     if paragraphs:
@@ -403,7 +408,7 @@ def build_episode_description(segment: str) -> str:
     return f"{summary[:42].rstrip('，。；、 ')}..."
 
 
-def format_duration_label(total_seconds: int | float) -> str:
+def format_duration_label(total_seconds) -> str:
     if not total_seconds:
         return "8分钟内"
     mins = int(total_seconds // 60)
@@ -475,7 +480,7 @@ def plan_album(text: str, title: str, intro: str) -> dict:
     if not paragraphs:
         raise RuntimeError("没有可用内容，暂时无法生成专辑")
 
-    episode_texts: list[str] = []
+    episode_texts: List[str] = []
     buffer = ""
     for paragraph in paragraphs:
         candidate = f"{buffer}\n\n{paragraph}".strip() if buffer else paragraph
@@ -492,7 +497,7 @@ def plan_album(text: str, title: str, intro: str) -> dict:
     if buffer:
         episode_texts.append(buffer)
 
-    merged: list[str] = []
+    merged: List[str] = []
     for segment in episode_texts:
         if merged and len(segment) < MIN_EPISODE_CHARS and len(merged[-1]) + len(segment) <= MAX_EPISODE_CHARS:
             merged[-1] = f"{merged[-1]}\n\n{segment}".strip()
@@ -527,7 +532,7 @@ async def generate_episode_audio(
     text: str,
     job_dir: Path,
     file_prefix: str,
-    cancel_event: threading.Event | None = None,
+    cancel_event: Optional[threading.Event] = None,
 ) -> dict:
     appid = os.environ.get("VOLC_APP_ID", "").strip()
     access_token = os.environ.get("VOLC_ACCESS_TOKEN", "").strip()
@@ -649,8 +654,8 @@ async def generate_album(
     text: str,
     title: str,
     intro: str,
-    progress_callback: Callable[[int, str], None] | None = None,
-    cancel_event: threading.Event | None = None,
+    progress_callback: Optional[Callable[[int, str], None]] = None,
+    cancel_event: Optional[threading.Event] = None,
 ) -> dict:
     plan = plan_album(text, title, intro)
     job_id = f"job-{int(time.time())}-{uuid.uuid4().hex[:6]}"
@@ -743,7 +748,7 @@ def save_albums(data: dict) -> None:
     ALBUMS_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
-def total_duration_label(total_seconds: int | float) -> str:
+def total_duration_label(total_seconds) -> str:
     if not total_seconds or total_seconds <= 0:
         return "约 5 分钟"
     minutes = max(1, round(total_seconds / 60))
@@ -955,6 +960,9 @@ class PodcastTestHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         parsed = urlparse(self.path)
+        if parsed.path == "/api/albums":
+            self._send_json(200, list_albums_payload())
+            return
         if parsed.path == "/api/jobs":
             self._send_json(200, {"jobs": list_jobs()})
             return

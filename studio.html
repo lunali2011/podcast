@@ -807,7 +807,10 @@
         </div>
     </div>
 
+    <script src="./site-config.js"></script>
     <script>
+        const API_BASE = (window.LUNA_API_BASE || "").replace(/\/$/, "");
+
         const albumTitleInput = document.getElementById("albumTitleInput");
         const sourceFileInput = document.getElementById("sourceFileInput");
         const sourceTextInput = document.getElementById("sourceTextInput");
@@ -852,6 +855,11 @@
                 .replaceAll(">", "&gt;")
                 .replaceAll('"', "&quot;")
                 .replaceAll("'", "&#39;");
+        }
+
+        function apiUrl(path) {
+            if (!API_BASE) return path;
+            return `${API_BASE}${path}`;
         }
 
         function setStudioStatus(text, type = "") {
@@ -976,7 +984,7 @@
             setStudioStatus("正在出品到首页…", "");
 
             try {
-                const publishRes = await fetch("/api/publish", {
+                const publishRes = await fetch(apiUrl("/api/publish"), {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -990,23 +998,9 @@
                     throw new Error(publishData.error || "出品失败");
                 }
 
-                publishBtn.textContent = "正在同步到 GitHub…";
-                draftNote.textContent = "正在 git push 上线…";
-                const syncRes = await fetch("/api/sync", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        message: `Publish album: ${publishData.album.title}`
-                    })
-                });
-                const syncData = await syncRes.json();
-                if (!syncRes.ok) {
-                    throw new Error(syncData.error || "git push 失败");
-                }
-
                 publishBtn.textContent = "已上线";
-                draftNote.textContent = "专辑已上线，刷新首页即可看到。";
-                setStudioStatus("出品成功，已推送到 GitHub Pages。", "success");
+                draftNote.textContent = "专辑已上线，返回首页就能看到。";
+                setStudioStatus("出品成功，首页现在可以读取到这张专辑。", "success");
                 regenerateBtn.disabled = false;
             } catch (err) {
                 console.error(err);
@@ -1050,7 +1044,7 @@
             jobsBoard.querySelectorAll("[data-cancel-id]").forEach((button) => {
                 button.addEventListener("click", async () => {
                     const jobId = button.dataset.cancelId;
-                    await fetch(`/api/jobs/${jobId}/cancel`, { method: "POST" });
+                    await fetch(apiUrl(`/api/jobs/${jobId}/cancel`), { method: "POST" });
                     await refreshJobs();
                 });
             });
@@ -1058,7 +1052,7 @@
             jobsBoard.querySelectorAll("[data-dismiss-id]").forEach((button) => {
                 button.addEventListener("click", async () => {
                     const jobId = button.dataset.dismissId;
-                    await fetch(`/api/jobs/${jobId}`, { method: "DELETE" });
+                    await fetch(apiUrl(`/api/jobs/${jobId}`), { method: "DELETE" });
                     if (activeJobId === jobId) {
                         activeJobId = "";
                         localStorage.removeItem("luna_studio_active_job_id");
@@ -1102,7 +1096,7 @@
         }
 
         async function refreshJobs() {
-            const response = await fetch("/api/jobs");
+            const response = await fetch(apiUrl("/api/jobs"));
             const data = await response.json();
             const jobs = data.jobs || [];
             renderJobs(jobs);
@@ -1137,7 +1131,7 @@
             lastGeneratedDraft = null;
 
             try {
-                const response = await fetch("/api/jobs", {
+                const response = await fetch(apiUrl("/api/jobs"), {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -1185,7 +1179,7 @@
             setStudioStatus(`正在提取 ${file.name} 的正文...`);
 
             try {
-                const response = await fetch("/api/extract-text", {
+                const response = await fetch(apiUrl("/api/extract-text"), {
                     method: "POST",
                     body: formData
                 });
