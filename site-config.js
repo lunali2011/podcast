@@ -1,1 +1,1 @@
-window.LUNA_API_BASE = "https://api.lunapodcast.top";
+window.LUNA_API_BASE = "";

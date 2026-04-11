@@ -7,7 +7,7 @@ Build a consumer-facing podcast site where:
 - listeners can browse and play published albums
 - the creator can upload text or PDF, generate a podcast album draft, then publish it to the homepage
 
-The current focus is to make the online `studio` flow work safely without exposing any Doubao credentials.
+The current focus is to keep the whole site running on Volcengine under one domain and continue improving the creator flow without exposing any Doubao credentials.
 
 ## Important Product Decisions
 
@@ -39,8 +39,11 @@ The current focus is to make the online `studio` flow work safely without exposi
 ### Public Website
 
 - GitHub repo: [https://github.com/lunali2011/podcast](https://github.com/lunali2011/podcast)
-- Public site: [https://lunali2011.github.io/podcast/](https://lunali2011.github.io/podcast/)
-- The homepage already reads published albums from `albums.json`.
+- Main production site is now intended to run from Volcengine:
+  - [https://lunapodcast.top](https://lunapodcast.top)
+- Legacy GitHub Pages URL still exists as a fallback / old entry:
+  - [https://lunali2011.github.io/podcast/](https://lunali2011.github.io/podcast/)
+- The homepage uses `albums.json` as the current album source.
 
 ### Local / Creator Flow
 
@@ -77,8 +80,11 @@ The current focus is to make the online `studio` flow work safely without exposi
     - `git`
     - `nginx`
     - `poppler-utils`
-- The backend server was successfully started on ECS and confirmed reachable from a local machine via:
-  - `http://115.190.112.80:8765/api/albums`
+- The backend is now managed by `systemd`
+- Service name:
+  - `luna-podcast-api`
+- The backend has already been verified locally on the server through:
+  - `https://api.lunapodcast.top/api/albums`
 
 ## Very Important Security Rule
 
@@ -93,36 +99,29 @@ They must stay only in the server-side `.env` on ECS.
 
 ## Current Deployment Reality
 
-### What works now
+### Current intended production architecture
 
-- The backend is reachable over **HTTP** on ECS:
-  - `http://115.190.112.80:8765`
+- Frontend static files are intended to be served from Volcengine ECS
+- Backend API is served from the same ECS machine
+- Nginx fronts the site and proxies `/api/` to Python on `127.0.0.1:8765`
+- Main domain:
+  - `https://lunapodcast.top`
+- API domain also exists:
+  - `https://api.lunapodcast.top`
 
-### What does NOT work yet for public GitHub Pages
+### Important note
 
-- GitHub Pages is served over `HTTPS`
-- the current backend is only `HTTP`
-- so the public `studio.html` cannot safely call that API yet because of mixed-content browser blocking
-
-## Why The Domain Matters
-
-To make the public online `studio` page work, the backend needs:
-
-- a domain, planned: `api.zhoubeihang.com`
-- HTTPS
-- likely `nginx` reverse proxy to the Python server on port `8765`
-
-Only after that should the public frontend point `site-config.js` at the remote API.
+- During migration, GitHub Pages may still show older or fallback behavior
+- The long-term target is to stop depending on GitHub Pages for production traffic
 
 ## Current API Direction
 
-The frontend was already prepared to support a remote API base.
-
-Current change:
-
-- `index.html` now tries `GET /api/albums` first, then falls back to local `albums.json`
-- `studio.html` uses a shared `API_BASE` helper from `site-config.js`
-- `podcast_test_server.py` now exposes `GET /api/albums`
+- Same-origin is now the preferred direction
+- [`/Users/liyuemei/Desktop/实验agent/podcast/site-config.js`](/Users/liyuemei/Desktop/实验agent/podcast/site-config.js) is now intended to stay:
+  - `window.LUNA_API_BASE = "";`
+- That means:
+  - frontend pages should call `/api/...`
+  - Nginx handles routing
 
 ## Server Notes
 
@@ -136,18 +135,16 @@ to:
 
 - `0.0.0.0`
 
-so ECS can accept public requests on port `8765`.
+so ECS can accept requests that Nginx proxies internally.
 
 ### Security group
 
-Port `8765/TCP` was opened temporarily for testing.
+Current important inbound ports:
 
-Longer-term preferred setup:
-
-- open `80`
-- open `443`
-- put `nginx` in front
-- keep raw Python service internal if desired
+- `22/TCP`
+- `80/TCP`
+- `443/TCP`
+- `8765/TCP` was opened during debugging and can be removed later if only Nginx is used publicly
 
 ## Data / Storage Status
 
@@ -163,44 +160,34 @@ Longer-term preferred setup:
 - audio storage: Volcengine TOS
 - metadata: JSON first, then database if needed later
 
-## Current Git Working Tree
+## Current Deployment Files
 
-At the time this file was written, local repo changes were not fully committed yet.
-
-Changed files:
-
-- [`/Users/liyuemei/Desktop/实验agent/podcast/index.html`](/Users/liyuemei/Desktop/实验agent/podcast/index.html)
-- [`/Users/liyuemei/Desktop/实验agent/podcast/studio.html`](/Users/liyuemei/Desktop/实验agent/podcast/studio.html)
-- [`/Users/liyuemei/Desktop/实验agent/podcast/podcast_test_server.py`](/Users/liyuemei/Desktop/实验agent/podcast/podcast_test_server.py)
-- new file: [`/Users/liyuemei/Desktop/实验agent/podcast/site-config.js`](/Users/liyuemei/Desktop/实验agent/podcast/site-config.js)
+- Main migration note:
+  - [`/Users/liyuemei/Desktop/实验agent/podcast/deploy/VOLCENGINE_MIGRATION.md`](/Users/liyuemei/Desktop/实验agent/podcast/deploy/VOLCENGINE_MIGRATION.md)
+- Nginx template:
+  - [`/Users/liyuemei/Desktop/实验agent/podcast/deploy/lunapodcast.nginx.conf`](/Users/liyuemei/Desktop/实验agent/podcast/deploy/lunapodcast.nginx.conf)
 
 ## Next Recommended Steps
 
-### Path A: continue public online studio
-
-1. Add DNS record for `api.zhoubeihang.com` -> `115.190.112.80`
-2. Install and configure `nginx`
-3. Get HTTPS working
-4. Point `site-config.js` to `https://api.zhoubeihang.com`
-5. Re-test homepage and `studio.html`
-
-### Path B: pause public studio and keep creator flow private for now
-
-1. Keep the public site as a listener-facing site only
-2. Use creator flow locally or via direct server access
-3. Resume HTTPS/domain work later
+1. Validate production pages on:
+   - `https://lunapodcast.top`
+   - `https://lunapodcast.top/studio.html`
+2. Confirm homepage album data and audio paths all work correctly when served from ECS
+3. Confirm `studio` upload / job / publish flow works on the production domain
+4. If stable, gradually treat GitHub Pages as backup instead of primary
+5. Later:
+   - decide whether to move generated audio to Volcengine TOS
+   - optionally close public `8765` if no longer needed
 
 ## Exact Resume Point For Next Session
 
 If resuming later, start from this question:
 
-> Has `api.zhoubeihang.com` already been pointed to `115.190.112.80`, and do we want to continue the HTTPS setup now?
+> Is `https://lunapodcast.top` already serving both frontend pages and `/api/*` correctly for real browser use?
 
-If yes, next work should be:
+If not, next work should be:
 
-1. verify DNS resolution
-2. configure `nginx`
-3. set up HTTPS
-4. update `site-config.js`
-5. test public `studio.html`
-
+1. verify current Nginx live config on ECS
+2. verify frontend static root on ECS
+3. test `/api/albums`, homepage, and `studio.html`
+4. fix any remaining production-domain issues before returning to feature work
