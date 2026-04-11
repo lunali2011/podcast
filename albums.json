@@ -1,0 +1,65 @@
+{
+  "albums": [
+    {
+      "id": "album-cosmology",
+      "slug": "cosmology-and-modern-world",
+      "title": "宇宙观与现代世界",
+      "subtitle": "艾伦·麦克法兰的现代世界观察",
+      "description": "这张专辑来自英国人类学家艾伦·麦克法兰对现代世界的观察。它提炼了这本书里最值得反复听的几个问题：世界观是什么，现代时间观从哪里来，为什么欧洲会迷信进步，以及西方如何一步步改写对中国的看法。",
+      "cardDescription": "提炼这本书里最值得反复听的几个问题：世界观、时间观、进步信仰，以及西方如何一步步改写对中国的看法。",
+      "tags": ["畅销书", "思想史", "现代世界"],
+      "coverGradient": "linear-gradient(135deg, #5f73ff 0%, #5674d9 42%, #1f7dc2 100%)",
+      "totalDurationLabel": "约 36 分钟",
+      "episodeCount": 5,
+      "createdAt": "2026-03-01T00:00:00Z",
+      "sourceJobId": null,
+      "episodes": [
+        {
+          "id": "ep-cosmology-01",
+          "index": "01",
+          "title": "世界观：我们日用而不知的玻璃瓶",
+          "description": "从一个最常用却最少被意识到的概念切入，讲清楚什么叫世界观。",
+          "audioUrl": "./mp3/世界观：我们日用而不知的玻璃瓶.mp3",
+          "durationLabel": "7:32",
+          "rounds": []
+        },
+        {
+          "id": "ep-cosmology-02",
+          "index": "02",
+          "title": "时间的发明：从循环到线性",
+          "description": "为什么现代人会执着于未来、效率和进度？答案可能就藏在时间观里。",
+          "audioUrl": "./mp3/时间的发明：从循环到线性.mp3",
+          "durationLabel": "7:51",
+          "rounds": []
+        },
+        {
+          "id": "ep-cosmology-03",
+          "index": "03",
+          "title": "进步信仰：欧洲如何迷信明天会更好",
+          "description": "讲清楚所谓\u201c进步\u201d为什么会变成一种被深信不疑的现代信仰。",
+          "audioUrl": "./mp3/进步信仰：欧洲如何迷信明天会更好 (1).mp3",
+          "durationLabel": "6:51",
+          "rounds": []
+        },
+        {
+          "id": "ep-cosmology-04",
+          "index": "04",
+          "title": "西方看中国：从仰慕到蔑视的真相",
+          "description": "一个足够抓人的标题，加上一句清楚的简介，就能让用户自然点进去听。",
+          "audioUrl": "./mp3/西方看中国：从仰慕到蔑视的真相.mp3",
+          "durationLabel": "7:02",
+          "rounds": []
+        },
+        {
+          "id": "ep-cosmology-05",
+          "index": "05",
+          "title": "未来交响乐：差异不是威胁",
+          "description": "把专辑收束到未来视角，告诉用户这不只是在回顾历史，而是在理解我们今天怎么生活。",
+          "audioUrl": "./mp3/未来交响乐：差异不是威胁.mp3",
+          "durationLabel": "7:06",
+          "rounds": []
+        }
+      ]
+    }
+  ]
+}

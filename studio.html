@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Luna的播客 | 新建专辑</title>
+    <style>
+        :root {
+            --bg: #0b1124;
+            --bg-2: #111a37;
+            --panel: rgba(19, 27, 52, 0.92);
+            --panel-strong: rgba(24, 33, 62, 0.96);
+            --text: #f4f7ff;
+            --muted: #9fadd0;
+            --accent: #88a2ff;
+            --accent-soft: rgba(136, 162, 255, 0.14);
+            --line: rgba(167, 186, 255, 0.14);
+            --line-strong: rgba(167, 186, 255, 0.22);
+            --shadow: 0 20px 42px rgba(4, 8, 22, 0.34);
+            --success: #a7efd1;
+            --warning: #ffcf97;
+            --danger: #ffb5c3;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html {
+            -webkit-text-size-adjust: 100%;
+            text-size-adjust: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 16px 16px calc(112px + env(safe-area-inset-bottom));
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(109, 125, 255, 0.16), transparent 24%),
+                radial-gradient(circle at top right, rgba(77, 156, 255, 0.12), transparent 26%),
+                radial-gradient(circle at bottom right, rgba(84, 105, 255, 0.14), transparent 24%),
+                linear-gradient(160deg, #091023 0%, #0f1730 54%, #172855 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", sans-serif;
+        }
+
+        button,
+        input,
+        textarea {
+            font: inherit;
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :focus-visible {
+            outline: 2px solid rgba(136, 162, 255, 0.82);
+            outline-offset: 2px;
+        }
+
+        .app {
+            width: min(100%, 440px);
+            margin: 0 auto;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 0;
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .brand-logo {
+            width: 52px;
+            height: 52px;
+            flex: 0 0 auto;
+            display: block;
+        }
+
+        .brand-copy {
+            min-width: 0;
+        }
+
+        .brand-name {
+            font-size: 14px;
+            line-height: 1.2;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .brand-subtitle {
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.3;
+        }
+
+        .topbar-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 84px;
+            height: 36px;
+            padding: 0 14px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(22, 31, 58, 0.92);
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            flex: 0 0 auto;
+        }
+
+        .hero {
+            margin-bottom: 16px;
+        }
+
+        .hero h1 {
+            max-width: 10ch;
+            margin-bottom: 12px;
+            font-size: 34px;
+            line-height: 1.08;
+            letter-spacing: -0.05em;
+        }
+
+        .hero p {
+            max-width: 34em;
+            color: var(--muted);
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .stack {
+            display: grid;
+            gap: 14px;
+        }
+
+        .panel,
+        .result,
+        .status {
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            background:
+                radial-gradient(circle at top right, rgba(136, 162, 255, 0.08), transparent 26%),
+                linear-gradient(180deg, rgba(24, 34, 64, 0.96), rgba(16, 23, 46, 0.98));
+            box-shadow: var(--shadow);
+        }
+
+        .panel {
+            padding: 16px;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.25;
+            letter-spacing: -0.03em;
+            margin-bottom: 14px;
+        }
+
+        .field {
+            margin-bottom: 14px;
+        }
+
+        .field:last-child {
+            margin-bottom: 0;
+        }
+
+        .field-head {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .field-label {
+            display: inline-flex;
+            align-items: center;
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.4;
+        }
+
+        .field-meta {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.4;
+            white-space: nowrap;
+        }
+
+        .input,
+        .textarea {
+            width: 100%;
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            background: rgba(12, 18, 36, 0.72);
+            color: var(--text);
+            padding: 13px 14px;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+        }
+
+        .input::placeholder,
+        .textarea::placeholder {
+            color: rgba(159, 173, 208, 0.62);
+        }
+
+        .textarea {
+            min-height: 240px;
+            resize: vertical;
+            line-height: 1.72;
+        }
+
+        .upload-field {
+            display: grid;
+            gap: 8px;
+        }
+
+        .mode-switch {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .mode-option {
+            min-height: 42px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(18, 25, 48, 0.82);
+            color: var(--muted);
+            font-weight: 700;
+        }
+
+        .mode-option.is-active {
+            background: var(--accent-soft);
+            color: var(--accent);
+            border-color: rgba(136, 162, 255, 0.28);
+        }
+
+        .upload-dropzone {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border: 1px dashed var(--line-strong);
+            border-radius: 18px;
+            padding: 14px;
+            background: rgba(12, 18, 36, 0.48);
+            cursor: pointer;
+            transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
+        }
+
+        .upload-dropzone:active {
+            transform: scale(0.995);
+        }
+
+        .upload-dropzone-copy {
+            min-width: 0;
+        }
+
+        .upload-dropzone-copy strong {
+            display: block;
+            margin-bottom: 4px;
+            color: var(--text);
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .upload-dropzone-copy span {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .upload-dropzone-cta {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex: 0 0 auto;
+            min-width: 84px;
+            height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            background: var(--accent-soft);
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .upload-input {
+            display: none;
+        }
+
+        .selected-file {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 999px;
+            min-height: 46px;
+            padding: 0 18px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: transform 0.18s ease, opacity 0.18s ease, background 0.18s ease;
+        }
+
+        .btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .btn:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, #879cff, #6178ff);
+            color: #f7f9ff;
+            box-shadow: 0 12px 24px rgba(66, 89, 197, 0.32);
+            flex: 1 1 180px;
+        }
+
+        .btn.secondary {
+            background: rgba(22, 31, 58, 0.92);
+            color: var(--accent);
+            border: 1px solid var(--line);
+        }
+
+        .result-summary {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+        }
+
+        .meta-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(136, 162, 255, 0.12);
+            color: var(--accent);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .status {
+            padding: 14px 16px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+            display: none;
+        }
+
+        .status.is-visible {
+            display: block;
+        }
+
+        .status.is-error {
+            color: var(--danger);
+            border-color: rgba(255, 140, 173, 0.22);
+        }
+
+        .status.is-success {
+            color: var(--success);
+        }
+
+        .jobs-board {
+            display: none;
+            gap: 10px;
+        }
+
+        .jobs-board.is-visible {
+            display: grid;
+        }
+
+        .job-card {
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 14px;
+            background: rgba(18, 25, 48, 0.88);
+        }
+
+        .job-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .job-title {
+            font-size: 15px;
+            line-height: 1.4;
+            font-weight: 700;
+        }
+
+        .job-meta {
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .job-close {
+            border: none;
+            background: transparent;
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .job-progress {
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            margin-top: 12px;
+        }
+
+        .job-progress-bar {
+            height: 100%;
+            width: 0;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #7a8fff, #8ec8ff);
+            transition: width 0.25s ease;
+        }
+
+        .job-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .job-status {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.4;
+        }
+
+        .job-action {
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            background: rgba(22, 31, 58, 0.92);
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .result {
+            padding: 16px;
+        }
+
+        .result-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .result-title {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.25;
+            letter-spacing: -0.03em;
+        }
+
+        .result-subtitle {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .audio {
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .album-head {
+            margin-top: 12px;
+        }
+
+        .album-name {
+            font-size: 22px;
+            line-height: 1.25;
+            font-weight: 700;
+            letter-spacing: -0.04em;
+        }
+
+        .album-desc {
+            margin-top: 8px;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.65;
+        }
+
+        .result-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .result-note {
+            margin-top: 10px;
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .result-grid {
+            display: grid;
+            gap: 12px;
+            margin-top: 14px;
+        }
+
+        .result-card {
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            padding: 14px;
+            background: linear-gradient(180deg, rgba(28, 38, 72, 0.62), rgba(19, 27, 52, 0.54));
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+
+        .episode-kicker {
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .episode-title {
+            font-size: 17px;
+            line-height: 1.45;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .episode-desc {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .episode-transcript {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--line);
+            display: grid;
+            gap: 10px;
+        }
+
+        .transcript-line {
+            display: grid;
+            grid-template-columns: 64px 1fr;
+            gap: 10px;
+            align-items: start;
+        }
+
+        .transcript-speaker {
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.7;
+        }
+
+        .transcript-text {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+        }
+
+        .transcript-empty {
+            color: var(--muted);
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .episode-toggle {
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 0;
+            cursor: pointer;
+        }
+
+        .completion-modal {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background: rgba(6, 10, 24, 0.66);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 40;
+        }
+
+        .completion-modal.is-visible {
+            display: flex;
+        }
+
+        .completion-card {
+            width: min(100%, 380px);
+            border: 1px solid var(--line);
+            border-radius: 26px;
+            padding: 22px 18px 18px;
+            background:
+                radial-gradient(circle at top right, rgba(136, 162, 255, 0.1), transparent 28%),
+                linear-gradient(180deg, rgba(24, 34, 64, 0.98), rgba(16, 23, 46, 1));
+            box-shadow: 0 24px 48px rgba(4, 8, 22, 0.42);
+        }
+
+        .completion-kicker {
+            color: var(--accent);
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .completion-title {
+            font-size: 26px;
+            line-height: 1.15;
+            letter-spacing: -0.04em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .completion-copy {
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .completion-summary {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .completion-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        @media (min-width: 480px) {
+            body {
+                padding-inline: 18px;
+            }
+
+            .hero h1 {
+                font-size: 34px;
+            }
+
+            .panel,
+            .result {
+                padding: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <header class="topbar">
+            <a class="brand" href="./index.html" aria-label="返回发现页">
+                <img class="brand-logo" src="./logo-luna.svg" alt="Luna的播客 logo">
+                <div class="brand-copy">
+                    <div class="brand-name">Luna的播客</div>
+                    <div class="brand-subtitle">创作页</div>
+                </div>
+            </a>
+            <a class="topbar-link" href="./index.html">返回发现</a>
+        </header>
+
+        <section class="hero">
+            <h1>创建你的播客</h1>
+            <p>把一段内容变成可以直接试听的播客，适合跑步、通勤和上班路上听。</p>
+        </section>
+
+        <section class="stack">
+            <section class="panel">
+                <div class="panel-title">输入内容</div>
+
+                <div class="field">
+                    <label class="field-label" for="albumTitleInput">标题</label>
+                    <input class="input" id="albumTitleInput" placeholder="例如：宇宙观与现代世界">
+                </div>
+
+                <div class="field upload-field">
+                    <label class="field-label" for="albumIntroInput">简介</label>
+                    <textarea class="textarea" id="albumIntroInput" placeholder="一句话说清楚这张播客是讲什么的。" style="min-height: 116px;"></textarea>
+                </div>
+
+                <div class="field">
+                    <div class="mode-switch">
+                        <button class="mode-option is-active" id="uploadModeBtn" type="button">上传文件</button>
+                        <button class="mode-option" id="pasteModeBtn" type="button">粘贴文本</button>
+                    </div>
+                </div>
+
+                <div class="field upload-field" id="uploadField">
+                    <div class="field-head">
+                        <label class="field-label" for="sourceFileInput">上传文件</label>
+                        <span class="field-meta" id="selectedFileName"></span>
+                    </div>
+                    <label class="upload-dropzone" for="sourceFileInput">
+                        <div class="upload-dropzone-copy">
+                            <strong>选择 .txt 或 .pdf</strong>
+                            <span>上传后会自动提取文本。</span>
+                        </div>
+                        <span class="upload-dropzone-cta">选择文件</span>
+                    </label>
+                    <input class="upload-input" id="sourceFileInput" type="file" accept=".txt,.pdf">
+                </div>
+
+                <div class="field hidden" id="pasteField">
+                    <div class="field-head">
+                        <label class="field-label" for="sourceTextInput">粘贴文本</label>
+                        <span class="field-meta" id="charCountText">0 字</span>
+                    </div>
+                    <textarea class="textarea" id="sourceTextInput" placeholder="把你想做成播客的内容贴在这里。"></textarea>
+                </div>
+
+                <div class="actions">
+                    <button class="btn primary" id="generatePodcastBtn">生成专辑</button>
+                    <button class="btn secondary" id="fillDemoBtn">示例内容</button>
+                </div>
+            </section>
+
+            <section class="status" id="studioStatus" aria-live="polite"></section>
+
+            <section class="jobs-board" id="jobsBoard"></section>
+
+            <section class="result" id="studioResult" hidden>
+                <div class="result-head">
+                    <div>
+                        <div class="result-title">专辑草稿</div>
+                        <div class="result-subtitle">满意了就直接出品到首页，不满意再点重新生成。</div>
+                    </div>
+                </div>
+                <div class="album-head">
+                    <div class="album-name" id="albumName"></div>
+                    <div class="album-desc" id="albumDesc"></div>
+                </div>
+                <div class="result-summary" id="resultSummary"></div>
+                <div class="result-actions">
+                    <button class="btn primary" id="publishBtn">出品到首页</button>
+                    <button class="btn secondary" id="regenerateBtn">重新生成专辑</button>
+                </div>
+                <div class="result-note" id="draftNote">出品后会自动同步到 GitHub Pages。</div>
+                <div class="result-grid" id="studioRounds"></div>
+            </section>
+        </section>
+    </main>
+
+    <div class="completion-modal" id="completionModal" aria-hidden="true">
+        <div class="completion-card">
+            <div class="completion-kicker">已生成完成</div>
+            <div class="completion-title" id="completionTitle"></div>
+            <div class="completion-copy" id="completionCopy"></div>
+            <div class="completion-summary" id="completionSummary"></div>
+            <div class="completion-actions">
+                <button class="btn primary" id="listenNowBtn" type="button">去收听</button>
+                <button class="btn secondary" id="listenLaterBtn" type="button">稍后再看</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const albumTitleInput = document.getElementById("albumTitleInput");
+        const sourceFileInput = document.getElementById("sourceFileInput");
+        const sourceTextInput = document.getElementById("sourceTextInput");
+        const charCountText = document.getElementById("charCountText");
+        const generatePodcastBtn = document.getElementById("generatePodcastBtn");
+        const fillDemoBtn = document.getElementById("fillDemoBtn");
+        const albumIntroInput = document.getElementById("albumIntroInput");
+        const studioStatus = document.getElementById("studioStatus");
+        const studioResult = document.getElementById("studioResult");
+        const studioRounds = document.getElementById("studioRounds");
+        const resultSummary = document.getElementById("resultSummary");
+        const albumName = document.getElementById("albumName");
+        const albumDesc = document.getElementById("albumDesc");
+        const selectedFileName = document.getElementById("selectedFileName");
+        const publishBtn = document.getElementById("publishBtn");
+        const regenerateBtn = document.getElementById("regenerateBtn");
+        const draftNote = document.getElementById("draftNote");
+        const uploadModeBtn = document.getElementById("uploadModeBtn");
+        const pasteModeBtn = document.getElementById("pasteModeBtn");
+        const uploadField = document.getElementById("uploadField");
+        const pasteField = document.getElementById("pasteField");
+        const jobsBoard = document.getElementById("jobsBoard");
+        const completionModal = document.getElementById("completionModal");
+        const completionTitle = document.getElementById("completionTitle");
+        const completionCopy = document.getElementById("completionCopy");
+        const completionSummary = document.getElementById("completionSummary");
+        const listenNowBtn = document.getElementById("listenNowBtn");
+        const listenLaterBtn = document.getElementById("listenLaterBtn");
+
+        let lastGeneratedDraft = null;
+        let inputMode = localStorage.getItem("luna_studio_input_mode") || "upload";
+        let extractedText = localStorage.getItem("luna_studio_extracted_text") || "";
+        let activeJobId = localStorage.getItem("luna_studio_active_job_id") || "";
+        let jobsPollTimer = null;
+        let completionJobId = "";
+        const seenCompletedJobs = new Set(JSON.parse(localStorage.getItem("luna_studio_seen_completed_jobs") || "[]"));
+
+        function escapeHtml(value) {
+            return String(value)
+                .replaceAll("&", "&amp;")
+                .replaceAll("<", "&lt;")
+                .replaceAll(">", "&gt;")
+                .replaceAll('"', "&quot;")
+                .replaceAll("'", "&#39;");
+        }
+
+        function setStudioStatus(text, type = "") {
+            studioStatus.textContent = text;
+            studioStatus.className = text ? `status is-visible${type ? ` is-${type}` : ""}` : "status";
+        }
+
+        function formatDuration(totalSeconds) {
+            if (!Number.isFinite(totalSeconds)) return "0:00";
+            const mins = Math.floor(totalSeconds / 60);
+            const secs = Math.round(totalSeconds % 60);
+            return `${mins}:${secs.toString().padStart(2, "0")}`;
+        }
+
+        function updateCharCount() {
+            const count = sourceTextInput.value.trim().length;
+            charCountText.textContent = `${count} 字`;
+        }
+
+        function applyInputMode(nextMode) {
+            inputMode = nextMode;
+            localStorage.setItem("luna_studio_input_mode", inputMode);
+            uploadModeBtn.classList.toggle("is-active", inputMode === "upload");
+            pasteModeBtn.classList.toggle("is-active", inputMode === "paste");
+            uploadField.classList.toggle("hidden", inputMode !== "upload");
+            pasteField.classList.toggle("hidden", inputMode !== "paste");
+        }
+
+        function speakerLabel(speaker) {
+            if (!speaker) return "嘉宾";
+            const value = String(speaker).toLowerCase();
+            if (value.includes("dayixiansheng") || value.includes("male")) return "大一先生";
+            if (value.includes("mizaitongxue") || value.includes("female")) return "米仔同学";
+            return "嘉宾";
+        }
+
+        function renderResult(album) {
+            albumName.textContent = album.title || "未命名专辑";
+            albumDesc.textContent = album.description || "";
+            resultSummary.innerHTML = `
+                <span class="meta-pill">${album.episodeCount} 集</span>
+                <span class="meta-pill">总时长约 ${escapeHtml(formatDuration(album.totalDuration || 0))}</span>
+            `;
+
+            studioRounds.innerHTML = (album.episodes || []).map((episode) => {
+                const rounds = (episode.rounds || []).filter((round) => (round.text || "").trim());
+                const transcriptHtml = rounds.length
+                    ? rounds.map((round) => `
+                        <div class="transcript-line">
+                            <span class="transcript-speaker">${escapeHtml(speakerLabel(round.speaker))}</span>
+                            <span class="transcript-text">${escapeHtml(round.text || "")}</span>
+                        </div>
+                    `).join("")
+                    : `<div class="transcript-empty">本集没有可显示的文稿。</div>`;
+                return `
+                <article class="result-card">
+                    <div class="episode-kicker">第 ${episode.index} 集 · ${escapeHtml(episode.durationLabel || "8分钟内")}</div>
+                    <div class="episode-title">${escapeHtml(episode.title || "")}</div>
+                    <div class="episode-desc">${escapeHtml(episode.description || "")}</div>
+                    ${episode.audioUrl ? `<audio class="audio" controls src="${escapeHtml(episode.audioUrl)}"></audio>` : ""}
+                    <button class="episode-toggle" type="button" data-episode-id="${escapeHtml(episode.id)}">查看文稿</button>
+                    <div class="episode-transcript hidden" id="transcript-${escapeHtml(episode.id)}">
+                        ${transcriptHtml}
+                    </div>
+                </article>`;
+            }).join("");
+
+            studioRounds.querySelectorAll(".episode-toggle").forEach((button) => {
+                button.addEventListener("click", () => {
+                    const episodeId = button.dataset.episodeId;
+                    const transcript = document.getElementById(`transcript-${episodeId}`);
+                    const isHidden = transcript.classList.toggle("hidden");
+                    button.textContent = isHidden ? "查看文稿" : "收起文稿";
+                });
+            });
+        }
+
+        function openAlbumFromJob(job) {
+            if (!job?.album) return;
+            completionJobId = "";
+            completionModal.classList.remove("is-visible");
+            completionModal.setAttribute("aria-hidden", "true");
+            renderResult(job.album);
+            studioResult.hidden = false;
+            publishBtn.disabled = false;
+            publishBtn.textContent = "出品到首页";
+            regenerateBtn.disabled = false;
+            draftNote.textContent = "出品后会自动同步到 GitHub Pages。";
+            lastGeneratedDraft = {
+                ...job.album,
+                jobId: job.id,
+                createdAt: new Date().toISOString()
+            };
+            studioResult.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+
+        function showCompletionModal(job) {
+            if (!job?.album) return;
+            completionJobId = job.id;
+            completionTitle.textContent = job.album.title || "你的播客已生成";
+            completionCopy.textContent = "这张专辑已经准备好了。你可以现在就去收听，也可以先放在下面的任务区，稍后再看。";
+            completionSummary.innerHTML = `
+                <span class="meta-pill">${job.album.episodeCount} 集</span>
+                <span class="meta-pill">总时长约 ${escapeHtml(formatDuration(job.album.totalDuration || 0))}</span>
+            `;
+            completionModal.classList.add("is-visible");
+            completionModal.setAttribute("aria-hidden", "false");
+        }
+
+        async function publishDraft() {
+            if (!lastGeneratedDraft || !lastGeneratedDraft.jobId) {
+                setStudioStatus("先生成一张专辑再出品。", "error");
+                return;
+            }
+            const confirmText = "确定要把这张专辑出品到首页吗？发布后会自动推送到 GitHub Pages。";
+            if (!window.confirm(confirmText)) return;
+
+            publishBtn.disabled = true;
+            regenerateBtn.disabled = true;
+            publishBtn.textContent = "正在出品…";
+            draftNote.textContent = "正在复制音频并写入专辑列表…";
+            setStudioStatus("正在出品到首页…", "");
+
+            try {
+                const publishRes = await fetch("/api/publish", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        jobId: lastGeneratedDraft.jobId,
+                        title: lastGeneratedDraft.title || "",
+                        description: lastGeneratedDraft.description || ""
+                    })
+                });
+                const publishData = await publishRes.json();
+                if (!publishRes.ok) {
+                    throw new Error(publishData.error || "出品失败");
+                }
+
+                publishBtn.textContent = "正在同步到 GitHub…";
+                draftNote.textContent = "正在 git push 上线…";
+                const syncRes = await fetch("/api/sync", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        message: `Publish album: ${publishData.album.title}`
+                    })
+                });
+                const syncData = await syncRes.json();
+                if (!syncRes.ok) {
+                    throw new Error(syncData.error || "git push 失败");
+                }
+
+                publishBtn.textContent = "已上线";
+                draftNote.textContent = "专辑已上线，刷新首页即可看到。";
+                setStudioStatus("出品成功，已推送到 GitHub Pages。", "success");
+                regenerateBtn.disabled = false;
+            } catch (err) {
+                console.error(err);
+                publishBtn.disabled = false;
+                regenerateBtn.disabled = false;
+                publishBtn.textContent = "出品到首页";
+                draftNote.textContent = "出品失败，请检查终端日志。";
+                setStudioStatus(err.message || "出品失败", "error");
+            }
+        }
+
+        function renderJobs(jobs) {
+            const visibleJobs = jobs.filter((job) => job.status !== "cancelled");
+            jobsBoard.classList.toggle("is-visible", visibleJobs.length > 0);
+            jobsBoard.innerHTML = visibleJobs.map((job) => {
+                const isRunning = job.status === "queued" || job.status === "running";
+                const closeAttr = isRunning
+                    ? `data-cancel-id="${escapeHtml(job.id)}"`
+                    : `data-dismiss-id="${escapeHtml(job.id)}"`;
+                return `
+                <article class="job-card">
+                    <div class="job-head">
+                        <div>
+                            <div class="job-title">${escapeHtml(job.title || "未命名专辑")}</div>
+                            <div class="job-meta">${escapeHtml(job.message || "")}</div>
+                        </div>
+                        <button class="job-close" type="button" ${closeAttr} aria-label="${isRunning ? "取消任务" : "移除任务"}">×</button>
+                    </div>
+                    <div class="job-progress">
+                        <div class="job-progress-bar" style="width:${Math.max(0, Math.min(100, job.progress || 0))}%;"></div>
+                    </div>
+                    ${(job.status === "succeeded" && job.album) ? `
+                        <div class="job-footer">
+                            <div class="job-status">已完成 · ${escapeHtml(job.album.episodeCount)} 集</div>
+                            <button class="job-action" type="button" data-listen-id="${escapeHtml(job.id)}">去收听</button>
+                        </div>
+                    ` : ""}
+                </article>`;
+            }).join("");
+
+            jobsBoard.querySelectorAll("[data-cancel-id]").forEach((button) => {
+                button.addEventListener("click", async () => {
+                    const jobId = button.dataset.cancelId;
+                    await fetch(`/api/jobs/${jobId}/cancel`, { method: "POST" });
+                    await refreshJobs();
+                });
+            });
+
+            jobsBoard.querySelectorAll("[data-dismiss-id]").forEach((button) => {
+                button.addEventListener("click", async () => {
+                    const jobId = button.dataset.dismissId;
+                    await fetch(`/api/jobs/${jobId}`, { method: "DELETE" });
+                    if (activeJobId === jobId) {
+                        activeJobId = "";
+                        localStorage.removeItem("luna_studio_active_job_id");
+                    }
+                    await refreshJobs();
+                });
+            });
+
+            jobsBoard.querySelectorAll("[data-listen-id]").forEach((button) => {
+                button.addEventListener("click", () => {
+                    const job = visibleJobs.find((item) => item.id === button.dataset.listenId);
+                    if (job) openAlbumFromJob(job);
+                });
+            });
+        }
+
+        function maybeShowCompletedAlbum(jobs) {
+            if (!activeJobId) return;
+            const job = jobs.find((item) => item.id === activeJobId);
+            if (!job) {
+                activeJobId = "";
+                localStorage.removeItem("luna_studio_active_job_id");
+                return;
+            }
+            if (job.status === "succeeded" && job.album) {
+                if (!seenCompletedJobs.has(job.id)) {
+                    seenCompletedJobs.add(job.id);
+                    localStorage.setItem("luna_studio_seen_completed_jobs", JSON.stringify([...seenCompletedJobs]));
+                    showCompletionModal(job);
+                }
+                setStudioStatus(`专辑已生成，共 ${job.album.episodeCount} 集。`, "success");
+            }
+            if (job.status === "failed") {
+                setStudioStatus(job.error || "生成失败", "error");
+            }
+            if (job.status === "cancelled") {
+                activeJobId = "";
+                localStorage.removeItem("luna_studio_active_job_id");
+                setStudioStatus("", "");
+            }
+        }
+
+        async function refreshJobs() {
+            const response = await fetch("/api/jobs");
+            const data = await response.json();
+            const jobs = data.jobs || [];
+            renderJobs(jobs);
+            maybeShowCompletedAlbum(jobs);
+            return jobs;
+        }
+
+        function startJobsPolling() {
+            if (jobsPollTimer) return;
+            jobsPollTimer = window.setInterval(() => {
+                refreshJobs().catch(() => {});
+            }, 2000);
+        }
+
+        async function generatePodcast() {
+            const pastedText = sourceTextInput.value.trim();
+            const text = inputMode === "paste" ? pastedText : extractedText.trim();
+            if (!text) {
+                setStudioStatus("请先填好文本或上传文件。", "error");
+                return;
+            }
+
+            generatePodcastBtn.disabled = true;
+            regenerateBtn.disabled = true;
+            publishBtn.disabled = true;
+            generatePodcastBtn.textContent = "已加入队列";
+            setStudioStatus("正在创建任务。", "");
+            studioResult.hidden = true;
+            studioRounds.innerHTML = "";
+            resultSummary.innerHTML = "";
+            draftNote.textContent = "出品后会自动同步到 GitHub Pages。";
+            lastGeneratedDraft = null;
+
+            try {
+                const response = await fetch("/api/jobs", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        text,
+                        title: albumTitleInput.value.trim(),
+                        intro: albumIntroInput.value.trim()
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || "生成失败");
+                activeJobId = data.job?.id || "";
+                localStorage.setItem("luna_studio_active_job_id", activeJobId);
+                setStudioStatus("任务已创建，正在后台生成。", "success");
+                startJobsPolling();
+                await refreshJobs();
+            } catch (error) {
+                setStudioStatus(error.message || "生成失败", "error");
+            } finally {
+                generatePodcastBtn.disabled = false;
+                generatePodcastBtn.textContent = "生成专辑";
+            }
+        }
+
+        sourceTextInput.addEventListener("input", () => {
+            updateCharCount();
+            localStorage.setItem("luna_studio_source_text", sourceTextInput.value);
+        });
+
+        albumTitleInput.addEventListener("input", () => {
+            localStorage.setItem("luna_studio_album_title", albumTitleInput.value);
+        });
+
+        albumIntroInput.addEventListener("input", () => {
+            localStorage.setItem("luna_studio_album_intro", albumIntroInput.value);
+        });
+
+        sourceFileInput.addEventListener("change", async (event) => {
+            const file = event.target.files?.[0];
+            if (!file) return;
+
+            selectedFileName.textContent = file.name;
+            const formData = new FormData();
+            formData.append("file", file);
+            setStudioStatus(`正在提取 ${file.name} 的正文...`);
+
+            try {
+                const response = await fetch("/api/extract-text", {
+                    method: "POST",
+                    body: formData
+                });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || "提取失败");
+
+                extractedText = data.text || "";
+                localStorage.setItem("luna_studio_extracted_text", extractedText);
+                selectedFileName.textContent = data.filename;
+                setStudioStatus(`已导入 ${data.filename}，现在可以直接生成专辑。`, "success");
+            } catch (error) {
+                extractedText = "";
+                localStorage.removeItem("luna_studio_extracted_text");
+                selectedFileName.textContent = "";
+                setStudioStatus(error.message || "提取失败", "error");
+            } finally {
+                sourceFileInput.value = "";
+            }
+        });
+
+        fillDemoBtn.addEventListener("click", () => {
+            albumTitleInput.value = "大模型十分钟";
+            albumIntroInput.value = "一张适合通勤和跑步时听的 AI 趋势入门播客。";
+            sourceTextInput.value = "分析下当前的大模型发展。可以从技术进步、主要应用场景、企业竞争、成本挑战和未来趋势这几个角度来展开。";
+            applyInputMode("paste");
+            updateCharCount();
+            localStorage.setItem("luna_studio_album_title", albumTitleInput.value);
+            localStorage.setItem("luna_studio_album_intro", albumIntroInput.value);
+            localStorage.setItem("luna_studio_source_text", sourceTextInput.value);
+            setStudioStatus("示例文本已填好，可以直接生成专辑。", "success");
+        });
+
+        uploadModeBtn.addEventListener("click", () => applyInputMode("upload"));
+        pasteModeBtn.addEventListener("click", () => applyInputMode("paste"));
+        generatePodcastBtn.addEventListener("click", generatePodcast);
+        regenerateBtn.addEventListener("click", generatePodcast);
+        publishBtn.addEventListener("click", publishDraft);
+        listenNowBtn.addEventListener("click", async () => {
+            const jobs = await refreshJobs();
+            const job = jobs.find((item) => item.id === completionJobId);
+            if (job) openAlbumFromJob(job);
+        });
+        listenLaterBtn.addEventListener("click", () => {
+            completionJobId = "";
+            completionModal.classList.remove("is-visible");
+            completionModal.setAttribute("aria-hidden", "true");
+        });
+
+        albumTitleInput.value = localStorage.getItem("luna_studio_album_title") || "";
+        albumIntroInput.value = localStorage.getItem("luna_studio_album_intro") || "";
+        sourceTextInput.value = localStorage.getItem("luna_studio_source_text") || "";
+        updateCharCount();
+        applyInputMode(inputMode);
+        selectedFileName.textContent = extractedText ? "已上传文件" : "";
+        refreshJobs().catch(() => {});
+        startJobsPolling();
+
+    </script>
+</body>
+</html>
