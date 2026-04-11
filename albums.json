@@ -1,6 +1,94 @@
 {
   "albums": [
     {
+      "id": "album-adolescence",
+      "slug": "making-peace-with-adolescence",
+      "title": "与青春期和解",
+      "subtitle": "从10岁到25岁，重新理解青春期",
+      "description": "这张专辑把青春期拆成 8 集短播客，不把它当成简单的叛逆阶段，而是从大脑发育、身份认同、亲子沟通、社交与学业压力一路讲到后期独立。适合正在养育青春期孩子的父母，也适合想重新理解自己成长阶段的人。",
+      "cardDescription": "从10岁到25岁，重新理解青春期：养育方式、沟通难题、身份认同、社交学业与后期独立。",
+      "tags": ["家庭教育", "青春期", "心理成长"],
+      "coverGradient": "linear-gradient(135deg, #ff7a59 0%, #ff5e9c 50%, #b85cff 100%)",
+      "totalDurationLabel": "约 46 分钟",
+      "episodeCount": 8,
+      "createdAt": "2026-04-11T00:00:00Z",
+      "sourceJobId": null,
+      "episodes": [
+        {
+          "id": "ep-adolescence-01",
+          "index": "01",
+          "title": "青春期不是叛逆期？10到25岁都算！",
+          "description": "先把青春期的边界讲清楚：它远不只是叛逆，而是一段跨度很长的发展阶段。",
+          "audioUrl": "./mp3/青春期不是叛逆期？10到25岁都算！.mp3",
+          "durationLabel": "4:38",
+          "rounds": []
+        },
+        {
+          "id": "ep-adolescence-02",
+          "index": "02",
+          "title": "权威型父母：青春期养育的最优解",
+          "description": "为什么最有效的养育方式不是高压控制，也不是完全放任，而是稳定又有边界的陪伴。",
+          "audioUrl": "./mp3/权威型父母：青春期养育的最优解.mp3",
+          "durationLabel": "5:22",
+          "rounds": []
+        },
+        {
+          "id": "ep-adolescence-03",
+          "index": "03",
+          "title": "青春期沟通：告别无效对话",
+          "description": "把最容易吵起来的话题拆开，看看亲子之间到底怎样才能真正说得通。",
+          "audioUrl": "./mp3/青春期沟通：告别无效对话.mp3",
+          "durationLabel": "5:56",
+          "rounds": []
+        },
+        {
+          "id": "ep-adolescence-04",
+          "index": "04",
+          "title": "青春期早期：身体大脑咋变了？",
+          "description": "从身体变化和大脑发育讲起，理解孩子为什么突然变得敏感、冲动又难懂。",
+          "audioUrl": "./mp3/青春期早期：身体大脑咋变了？.mp3",
+          "durationLabel": "6:22",
+          "rounds": []
+        },
+        {
+          "id": "ep-adolescence-05",
+          "index": "05",
+          "title": "青春期早期：社交与学校难题破解",
+          "description": "把同伴关系、学校适应和早期冲突放在一起看，帮父母找到更具体的应对方式。",
+          "audioUrl": "./mp3/青春期早期：社交与学校难题破解.mp3",
+          "durationLabel": "6:24",
+          "rounds": []
+        },
+        {
+          "id": "ep-adolescence-06",
+          "index": "06",
+          "title": "青春期中期：身份认同的关键阶段",
+          "description": "这一集聚焦最核心的问题之一：孩子到底如何在摇摆和试探中建立“我是谁”。",
+          "audioUrl": "./mp3/青春期中期：身份认同的关键阶段.mp3",
+          "durationLabel": "5:41",
+          "rounds": []
+        },
+        {
+          "id": "ep-adolescence-07",
+          "index": "07",
+          "title": "青春期中期：社交、学业与问题行为指南",
+          "description": "把青春期中期最容易让家庭焦虑的几件事放在同一张图里讲清楚。",
+          "audioUrl": "./mp3/青春期中期：社交、学业与问题行为指南.mp3",
+          "durationLabel": "5:09",
+          "rounds": []
+        },
+        {
+          "id": "ep-adolescence-08",
+          "index": "08",
+          "title": "青春期后期：父母如何应对空巢与独立",
+          "description": "最后一集把视角拉到青春期后期，讨论父母如何面对孩子独立和关系重建。",
+          "audioUrl": "./mp3/青春期后期：父母如何应对空巢与独立.mp3",
+          "durationLabel": "6:55",
+          "rounds": []
+        }
+      ]
+    },
+    {
       "id": "album-cosmology",
       "slug": "cosmology-and-modern-world",
       "title": "宇宙观与现代世界",
